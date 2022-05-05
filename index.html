@@ -22,8 +22,8 @@
     var Module = {
       preRun: [],
       postRun: [],
-      print: function () { },
-      printErr: function () { },
+      print: function (text) { console.log(text);},
+      printErr: function (text) { console.error(text);},
       canvas: (function () {
         var canvas = document.querySelector('#canvas');
 
