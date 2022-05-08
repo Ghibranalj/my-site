@@ -1,22 +1,18 @@
 CC = emcc
+# hack for github pages
+BUILD_PATH = docs
 OBJ_PATH = objs
 SRC_PATH = src
 LIB_PATH = vendor
-RUNNER = 
 SHELL_HTML = index.html
 ASSET_PATH = resources
-# hack for github pages
-BUILD_PATH = docs
 
-#FLAGS
-CCFLAGS=-Wall -D_DEFAULT_SOURCE -Os -s USE_GLFW=3 -s ASYNCIFY\
-		 -s TOTAL_MEMORY=16777216 -s FORCE_FILESYSTEM=1 -DPLATFORM_WEB -sASSERTIONS -s ALLOW_MEMORY_GROWTH=1
 
 #INCLUDE
-INC = $(SRC_PATH) $(LIB_PATH)/flecs/include $(LIB_PATH)/raylib_wasm/include
+INC = $(SRC_PATH) $(shell find $(LIB_PATH) -type d -name 'include')
 
 #LIBRARIES
-LIB = $(LIB_PATH)/flecs/libflecs_static.a $(LIB_PATH)/raylib_wasm/libraylib.a
+LIB = $(shell find $(LIB_PATH) -type f -name '*.a')
 
 
 ### LOGIC ###
@@ -27,32 +23,35 @@ MODULES := $(filter-out $(SRC_PATH),$(MODULES))
 INC_PARAMS=$(foreach d, $(INC), -I$d)
 LIB_PARAMS=$(foreach d, $(LIB), -L$(d))
 
+#FLAGS
+CCFLAGS=-Wall -D_DEFAULT_SOURCE -Os -s USE_GLFW=3 -s ASYNCIFY\
+		 -s TOTAL_MEMORY=16777216 -s FORCE_FILESYSTEM=1 -DPLATFORM_WEB -sASSERTIONS -s ALLOW_MEMORY_GROWTH=1 \
+		 --shell-file $(SHELL_HTML) --preload-file $(ASSET_PATH) $(LIB_PARAMS) $(LIB)
 
 ### TARGETS ###
 
-dev: mkdir binary run
+.PHONY: dev releases mkdir index
 
-release: mkdir binary
+dev: mkdir index run
+
+release: mkdir index
 
 mkdir :
-	mkdir -p $(BUILD_PATH) $(OBJ_PATH)
+	@mkdir -p $(BUILD_PATH) $(OBJ_PATH)
 ifneq ($(MODULES),)
-	mkdir -p $(foreach dir,$(MODULES),$(OBJ_PATH)/$(dir))
+	@mkdir -p $(foreach dir,$(MODULES),$(OBJ_PATH)/$(dir))
 endif
 
-binary: $(OBJS)
-	$(CC) $(OBJS) -o $(BUILD_PATH)/index.html --shell-file $(SHELL_HTML) \
-	--preload-file $(ASSET_PATH) \
-	$(CCFLAGS) $(LIB_PARAMS) $(LIB)
+index: $(OBJS)
+	$(CC) $^ -o $(BUILD_PATH)/index.html $(CCFLAGS)
 
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 	$(CC) $(INC_PARAMS) -c -o $@ $<
-	
-run:
-	python -m http.server 8080 --directory $(BUILD_PATH)
 
+.PHONY: run
+run:
+	@python -m http.server 8080 --directory $(BUILD_PATH)
+
+.PHONY: clean
 clean:
 	@rm -rf $(BUILD_PATH) $(OBJ_PATH)
-
-test:
-	@echo $(LIB_PARAMS)
