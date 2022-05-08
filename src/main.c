@@ -1,8 +1,7 @@
-#include "test.h"
-#include <stdio.h>
+
+#include "engine/engine.h"
 
 int main(int argc, char const *argv[])
 {
-    printf("Hello world!\n");
-    SayHello();
+    test();
 }
