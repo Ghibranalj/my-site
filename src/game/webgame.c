@@ -3,9 +3,13 @@
 #include <webengine.h>
 
 // local function declarations
-void webgame_init(ecs_world_t *);
+void webgame_init();
 void webgame_update(float);
 void webgame_destroy(void);
+
+//
+
+ecs_world_t *world = NULL;
 
 we_game_t webgame = {
     .title = "webgame",
@@ -18,16 +22,20 @@ we_game_t webgame = {
 };
 
 int main() {
-    we_create(&webgame);
+    webgame.world = world;
+    we_create_and_start(&webgame);
 }
 
-void webgame_init(ecs_world_t *world) {
+void webgame_init() {
+
+    world = we_get_world();
+
     printf("Starting webgame\n");
     ecs_id_t player;
     player = ecs_new_id(we_get_world());
 
-    WE_RC(we_position);
-    WE_RC(we_sprite);
+    WE_C(we_position);
+    WE_C(we_sprite);
 
     Texture2D texture = LoadTexture("resources/scarfy.png");
     we_position pos = {.x = 100, .y = 100};
