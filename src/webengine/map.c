@@ -4,7 +4,7 @@
 #include <raylib.h>
 #include <tmx.h>
 
-tmx_map *map;
+#include "include/webengine.h"
 
 void *raylib_tex_loader(const char *path) {
     Texture2D *returnValue = malloc(sizeof(Texture2D));
@@ -145,19 +145,31 @@ void draw_all_layers(tmx_map *map, tmx_layer *layers) {
     }
 }
 
-void we_draw_map() {
-    ClearBackground(int_to_color(map->backgroundcolor));
+void we_draw_map_system(ecs_iter_t *it) {
+    we_map *map_cs = ecs_term(it, we_map, 1);
 
-    draw_all_layers(map, map->ly_head);
+    for (int i = 0; i < it->count; i++) {
+        we_map map_c = map_cs[i];
+
+        tmx_map *map = map_c.map;
+
+        ClearBackground(int_to_color(map->backgroundcolor));
+        draw_all_layers(map, map->ly_head);
+    }
+}
+
+void we_on_delete_map(ecs_iter_t *it) {
+    we_map *map_cs = ecs_term(it, we_map, 1);
+
+    for (int i = 0; i < it->count; i++) {
+        we_map map_c = map_cs[i];
+
+        tmx_map *map = map_c.map;
+        tmx_map_free(map);
+    }
 }
 
 void we_init_map() {
     tmx_img_load_func = raylib_tex_loader;
     tmx_img_free_func = raylib_free_tex;
-
-    map = tmx_load("resources/tmx/tiled/0001_Level_0.tmx");
-    if (map == NULL) {
-        tmx_perror("Cannot load map");
-        return;
-    }
 }

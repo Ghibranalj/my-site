@@ -10,8 +10,7 @@ DEP_PATH = deps
 
 
 #INCLUDE
-INC = $(shell find $(SRC_PATH) -type d -name 'include') \
-	  $(shell find $(LIB_PATH) -type d -name 'include')
+INC = $(shell find $(SRC_PATH) $(LIB_PATH) -type d -name 'include')
 
 #LIBRARIES
 LIB = $(shell find $(LIB_PATH) -type f -name '*.a')
@@ -42,7 +41,7 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $(DEP_PATH)/$*.d
 ###############
 ### TARGETS ###
 ###############
-.PHONY: dev releases mkdir index
+.PHONY: dev releases mkdir index air
 
 dev: format mkdir index run
 
@@ -55,9 +54,11 @@ ifneq ($(MODULES),)
 endif
 
 index: $(OBJS)
+	$(info Building index.html...)
 	@$(CC) $^ -o $(BUILD_PATH)/index.html $(CCFLAGS) $(WASMFLAGS)
 
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
+	$(info Building $< ..)
 	@$(CC) $(INC_PARAMS) $(DEPFLAGS) $(CCFLAGS) -c -o $@ $<
 
 

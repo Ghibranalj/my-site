@@ -42,6 +42,13 @@ Camera2D we_camera;
 
 void we_init() {
 
+    we_camera = (Camera2D){
+        .offset = {0, 0},
+        .zoom = 7,
+        .rotation = 0,
+        .target = {64, 160},
+    };
+
     we_ecs_init();
 
     SetTargetFPS(we_game->fps);
@@ -50,18 +57,14 @@ void we_init() {
     we_init_map();
 
     we_game->on_init();
-    we_camera = (Camera2D){
-        .offset = {0, 0},
-        .zoom = 7,
-        .rotation = 0,
-        .target = {64, 160},
-    };
 }
 
 // must be called before using any components in any way
 #define _WE_RAC()                                                              \
     WE_C(we_sprite);                                                           \
-    WE_C(we_position)
+    WE_C(we_transform);                                                        \
+    WE_C(we_map);                                                              \
+    WE_C(we_spritesheet)
 
 void we_ecs_init() {
     we_world = ecs_init();
@@ -75,26 +78,31 @@ void we_ecs_init() {
 
 void we_ecs_init_systems() {
     _WE_RAC();
-    ECS_SYSTEM(we_world, we_draw_system, EcsOnUpdate, we_sprite, we_position);
-}
+    ECS_SYSTEM(we_world, we_draw_system, EcsOnUpdate, we_sprite, we_transform);
 
+    ECS_SYSTEM(we_world, we_draw_map_system, EcsPreUpdate, we_map);
+    ECS_SYSTEM(we_world, we_draw_spritesheet, EcsOnUpdate, we_spritesheet,
+               we_transform);
+}
+//
 void we_ecs_init_triggers() {
     _WE_RAC();
     ecs_trigger_init(we_world,
                      &(ecs_trigger_desc_t){.term = {ecs_id(we_sprite)},
                                            .events = {EcsOnRemove, EcsUnSet},
                                            .callback = we_on_delete_sprite});
+    ecs_trigger_init(we_world,
+                     &(ecs_trigger_desc_t){.term = {ecs_id(we_map)},
+                                           .events = {EcsOnRemove, EcsUnSet},
+                                           .callback = we_on_delete_map});
 }
 
 void we_update() {
     float delta = GetFrameTime();
     we_game->on_update(delta);
     BeginMode2D(we_camera);
-    // BeginDrawing();
-    we_draw_map();
 
     ecs_progress(we_world, delta);
-    // EndDrawing();
 
     if (IsKeyPressed(KEY_A))
         we_camera.target.x -= 5;

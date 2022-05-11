@@ -1,5 +1,7 @@
 #pragma once
-#include "flecs.h"
+#include <flecs.h>
+#include <raylib.h>
+#include <tmx.h>
 
 typedef void (*we_update_callback)(float time);
 typedef void (*we_callback)();
@@ -31,13 +33,19 @@ typedef struct {
     Texture2D texture;
 } we_sprite;
 
-we_sprite *we_load_sprite(const char *path);
-
-typedef struct {
-    float x, y;
-} we_position;
-
 typedef struct {
     Texture2D texture;
+    int width, height;
+    int offset;
+} we_spritesheet;
 
-} we_level;
+typedef struct {
+    Vector2 position;
+} we_transform;
+
+// automatically prefixed
+#define WE_MAP_LOCATION "resources/tmx/tiled/"
+
+typedef struct {
+    tmx_map *map;
+} we_map;

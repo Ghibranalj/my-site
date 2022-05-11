@@ -27,22 +27,28 @@ int main() {
 }
 
 void webgame_init() {
-
     world = we_get_world();
+    printf("world initialized\n");
+    // create a map
+    tmx_map *map = tmx_load(WE_MAP_LOCATION "0001_Level_0.tmx");
+    WE_C(we_map);
+    ecs_entity_t e = ecs_new_id(world);
+    ecs_add(world, e, we_map);
+    ecs_set(world, e, we_map, {.map = map});
 
-    printf("Starting webgame\n");
-    ecs_id_t player;
-    player = ecs_new_id(we_get_world());
+    WE_C(we_transform);
+    WE_C(we_spritesheet);
 
-    WE_C(we_position);
-    WE_C(we_sprite);
+    ecs_entity_t e2 = ecs_new_id(world);
+    ecs_add(world, e2, we_transform);
+    ecs_set(world, e2, we_transform, {.position = {100, 100}});
 
-    Texture2D texture = LoadTexture("resources/scarfy.png");
-    we_position pos = {.x = 100, .y = 100};
-    ecs_add(world, player, we_position);
-    ecs_set(world, player, we_position, {.x = 100, .y = 100});
-    ecs_add(world, player, we_sprite);
-    ecs_set(world, player, we_sprite, {.texture = texture});
+    ecs_add(world, e2, we_spritesheet);
+    ecs_set(world, e2, we_spritesheet,
+            {.texture = LoadTexture("resources/woman.png"),
+             .offset = 1,
+             .width = 16,
+             .height = 21});
 }
 
 void webgame_update(float delta) {}
