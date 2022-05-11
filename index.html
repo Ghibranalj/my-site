@@ -6,7 +6,11 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
   <title>My Game</title>
-
+  <script>
+    window.alert = function (msg){
+      console.error(msg);
+    }
+  </script>
 </head>
 
 <body>
@@ -42,7 +46,7 @@
 
 
     window.onerror = function () {
-      alert('Exception thrown, see JavaScript console');
+      console.error("exception thrown");
     };
   </script>
 
