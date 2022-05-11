@@ -41,11 +41,17 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $(DEP_PATH)/$*.d
 ###############
 ### TARGETS ###
 ###############
-.PHONY: dev releases mkdir index air
+.PHONY: release mkdir index air all dev
 
-dev: format mkdir index run
+all: format mkdir index
 
 release: mkdir index
+
+# run with make dev -j2
+dev: run air
+
+air:
+	air -c air.toml
 
 mkdir :
 	@mkdir -p $(BUILD_PATH) $(OBJ_PATH) $(DEP_PATH)
@@ -64,7 +70,8 @@ $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 
 .PHONY: run
 run:
-	@python -m http.server 8080 --directory $(BUILD_PATH)
+	$(info running on 8080)
+	@python -m http.server 8080 --directory $(BUILD_PATH) >/dev/null 2>&1
 
 .PHONY: clean
 clean:

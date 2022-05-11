@@ -49,8 +49,6 @@ void we_draw_spritesheet(ecs_iter_t *it) {
         int y_off = (off / x_num);
         int x_off = (off % x_num);
 
-        printf("%d,%d (%d)\n", x_off, y_off, off);
-
         Rectangle source_rect = {width * x_off, height * y_off, width, height};
 
         DrawTextureRec(tex, source_rect, tr.position, WHITE);
