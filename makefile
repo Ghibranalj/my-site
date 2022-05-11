@@ -71,7 +71,7 @@ $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 .PHONY: run
 run:
 	$(info running on 8080)
-	@python -m http.server 8080 --directory $(BUILD_PATH) >/dev/null 2>&1
+	@live-server $(BUILD_PATH)
 
 .PHONY: clean
 clean:

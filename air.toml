@@ -3,4 +3,6 @@ root = "."
 [build]
 cmd="make all && echo DONE"
 include_ext = ["c", "h", "png", "tmx"]
+exclude_file = ["resources/tmx.ldtk"]
+delay = 600
 exclude_dir = ["objs", "docs", "deps", ".vscode", "github","vendor"]

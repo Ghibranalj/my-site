@@ -26,6 +26,7 @@ void we_on_delete_sprite(ecs_iter_t *it) {
         UnloadTexture(tex);
     }
 }
+int x = 0;
 
 int o = 0;
 
@@ -42,8 +43,6 @@ void we_draw_spritesheet(ecs_iter_t *it) {
 
         int width = sp.width;
         int height = sp.height;
-        if (IsKeyPressed(KEY_SPACE))
-            o++;
         int off = (sp.offset + o) % 9;
         int x_num = ((tex.width + 1) / sp.width);
         int y_off = (off / x_num);

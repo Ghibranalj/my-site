@@ -44,9 +44,9 @@ void we_init() {
 
     we_camera = (Camera2D){
         .offset = {0, 0},
-        .zoom = 7,
+        .zoom = 2,
         .rotation = 0,
-        .target = {64, 160},
+        .target = {100, 100},
     };
 
     we_ecs_init();
