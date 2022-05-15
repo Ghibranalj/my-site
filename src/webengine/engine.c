@@ -28,7 +28,14 @@ void we_create_and_start(we_game_t *game) {
 
     we_init();
 
+#ifdef PLATFORM_WEB
     emscripten_set_main_loop(we_update, 0, 1);
+#else
+    while (!WindowShouldClose()) {
+        we_update();
+    }
+#endif
+
     we_destroy();
 }
 
@@ -44,7 +51,7 @@ void we_init() {
 
     we_camera = (Camera2D){
         .offset = {0, 0},
-        .zoom = 2,
+        .zoom = 4,
         .rotation = 0,
         .target = {100, 100},
     };
@@ -58,13 +65,6 @@ void we_init() {
 
     we_game->on_init();
 }
-
-// must be called before using any components in any way
-#define _WE_RAC()                                                              \
-    WE_C(we_sprite);                                                           \
-    WE_C(we_transform);                                                        \
-    WE_C(we_map);                                                              \
-    WE_C(we_spritesheet)
 
 void we_ecs_init() {
     we_world = ecs_init();
@@ -83,6 +83,9 @@ void we_ecs_init_systems() {
     ECS_SYSTEM(we_world, we_draw_map_system, EcsPreUpdate, we_map);
     ECS_SYSTEM(we_world, we_draw_spritesheet, EcsOnUpdate, we_spritesheet,
                we_transform);
+
+    ECS_SYSTEM(we_world, we_animate_system, EcsOnUpdate, we_animation,
+               we_spritesheet)
 }
 //
 void we_ecs_init_triggers() {
@@ -95,24 +98,33 @@ void we_ecs_init_triggers() {
                      &(ecs_trigger_desc_t){.term = {ecs_id(we_map)},
                                            .events = {EcsOnRemove, EcsUnSet},
                                            .callback = we_on_delete_map});
+
+    // TODO add trigger for delete spritesheet
 }
 
 void we_update() {
+
     float delta = GetFrameTime();
     we_game->on_update(delta);
-    BeginMode2D(we_camera);
 
-    ecs_progress(we_world, delta);
-
-    if (IsKeyPressed(KEY_A))
+    if (IsKeyDown(KEY_A))
         we_camera.target.x -= 5;
-    if (IsKeyPressed(KEY_W))
+    if (IsKeyDown(KEY_W))
         we_camera.target.y -= 5;
-    if (IsKeyPressed(KEY_D))
+    if (IsKeyDown(KEY_D))
         we_camera.target.x += 5;
-    if (IsKeyPressed(KEY_S))
+    if (IsKeyDown(KEY_S))
         we_camera.target.y += 5;
+
+    //
+    BeginDrawing();
+    //
+    BeginMode2D(we_camera);
+    ecs_progress(we_world, delta);
     EndMode2D();
+
+    //
+    EndDrawing();
 }
 
 void we_destroy() {

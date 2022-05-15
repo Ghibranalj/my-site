@@ -25,8 +25,6 @@ void we_create_and_start(we_game_t *game);
 
 ecs_world_t *we_get_world();
 
-#define WE_C(c) ECS_COMPONENT(we_get_world(), c)
-
 // engine provided components
 
 typedef struct {
@@ -49,3 +47,22 @@ typedef struct {
 typedef struct {
     tmx_map *map;
 } we_map;
+
+typedef struct {
+    int *frames;
+    int num_frames;
+    int index;
+    float time_since_last_frame;
+} we_animation;
+
+int *we_anim_frames(int num, int *frames_arr);
+
+#define WE_C(c) ECS_COMPONENT(we_get_world(), c)
+
+// must be called before using any components in any way
+#define _WE_RAC()                                                              \
+    WE_C(we_sprite);                                                           \
+    WE_C(we_transform);                                                        \
+    WE_C(we_map);                                                              \
+    WE_C(we_spritesheet);                                                      \
+    WE_C(we_animation)

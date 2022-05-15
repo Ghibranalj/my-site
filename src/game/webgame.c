@@ -1,5 +1,7 @@
 #include <raylib.h>
 #include <stdio.h>
+#include <stdlib.h>
+
 #include <webengine.h>
 
 // local function declarations
@@ -38,6 +40,7 @@ void webgame_init() {
 
     WE_C(we_transform);
     WE_C(we_spritesheet);
+    WE_C(we_animation);
 
     ecs_entity_t e2 = ecs_new_id(world);
     ecs_add(world, e2, we_transform);
@@ -49,8 +52,19 @@ void webgame_init() {
              .offset = 1,
              .width = 16,
              .height = 21});
+
+    int *frames = we_anim_frames(3, (int[]){1, 2, 3});
+
+    ecs_add(world, e2, we_animation);
+    ecs_set(world, e2, we_animation,
+            {.frames = frames,
+             .num_frames = 3,
+             .index = 0,
+             .time_since_last_frame = 0});
 }
 
-void webgame_update(float delta) {}
+void webgame_update(float delta) {
+    // printf("%f\n", delta);
+}
 
 void webgame_destroy() {}

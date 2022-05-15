@@ -62,6 +62,7 @@ endif
 index: $(OBJS)
 	$(info Building index.html...)
 	@$(CC) $^ -o $(BUILD_PATH)/index.html $(CCFLAGS) $(WASMFLAGS)
+	$(info  **************** BUILD SUCCESS ******************)
 
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 	$(info Building $< ..)
@@ -71,7 +72,7 @@ $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 .PHONY: run
 run:
 	$(info running on 8080)
-	@live-server $(BUILD_PATH)
+	@live-server $(BUILD_PATH)  --ignore-Pattern=.*tmp.* --wait=1500 -q  
 
 .PHONY: clean
 clean:
