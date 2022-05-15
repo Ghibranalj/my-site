@@ -13,4 +13,12 @@ void we_on_delete_spritesheet(ecs_iter_t *it);
 
 void we_animate_system(ecs_iter_t *it);
 
+void we_update_system(ecs_iter_t *it);
+void we_oneway_anim_system(ecs_iter_t *it);
+
+void we_script_system(ecs_iter_t *it);
+
+void we_on_delete_anim(ecs_iter_t *it);
+void we_on_delete_oneway_anim(ecs_iter_t *it);
+
 void we_init_map();

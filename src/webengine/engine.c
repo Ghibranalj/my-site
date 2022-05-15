@@ -85,19 +85,24 @@ void we_ecs_init_systems() {
                we_transform);
 
     ECS_SYSTEM(we_world, we_animate_system, EcsOnUpdate, we_animation,
-               we_spritesheet)
+               we_spritesheet);
+    ECS_SYSTEM(we_world, we_oneway_anim_system, EcsOnUpdate, we_oneway_anim,
+               we_spritesheet);
+
+    ECS_SYSTEM(we_world, we_script_system, EcsOnUpdate, we_script);
 }
 //
 void we_ecs_init_triggers() {
     _WE_RAC();
-    ecs_trigger_init(we_world,
-                     &(ecs_trigger_desc_t){.term = {ecs_id(we_sprite)},
-                                           .events = {EcsOnRemove, EcsUnSet},
-                                           .callback = we_on_delete_sprite});
-    ecs_trigger_init(we_world,
-                     &(ecs_trigger_desc_t){.term = {ecs_id(we_map)},
-                                           .events = {EcsOnRemove, EcsUnSet},
-                                           .callback = we_on_delete_map});
+
+    ECS_TRIGGER(we_world, we_on_delete_sprite, EcsOnRemove, we_sprite);
+
+    ECS_TRIGGER(we_world, we_on_delete_map, EcsOnRemove, we_map);
+
+    ECS_TRIGGER(we_world, we_on_delete_anim, EcsOnRemove, we_animation);
+
+    ECS_TRIGGER(we_world, we_on_delete_oneway_anim, EcsOnRemove,
+                we_oneway_anim);
 
     // TODO add trigger for delete spritesheet
 }
@@ -107,13 +112,13 @@ void we_update() {
     float delta = GetFrameTime();
     we_game->on_update(delta);
 
-    if (IsKeyDown(KEY_A))
+    if (IsKeyDown(KEY_LEFT))
         we_camera.target.x -= 5;
-    if (IsKeyDown(KEY_W))
+    if (IsKeyDown(KEY_UP))
         we_camera.target.y -= 5;
-    if (IsKeyDown(KEY_D))
+    if (IsKeyDown(KEY_RIGHT))
         we_camera.target.x += 5;
-    if (IsKeyDown(KEY_S))
+    if (IsKeyDown(KEY_DOWN))
         we_camera.target.y += 5;
 
     //

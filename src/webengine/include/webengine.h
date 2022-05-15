@@ -1,10 +1,14 @@
 #pragma once
 #include <flecs.h>
 #include <raylib.h>
+#include <stdbool.h>
 #include <tmx.h>
 
 typedef void (*we_update_callback)(float time);
 typedef void (*we_callback)();
+
+typedef void (*we_script_callback)(float time, ecs_entity_t entity,
+                                   ecs_world_t *t_world);
 // typedef void (*we_init_callback)(ecs_world_t *world);
 
 typedef struct {
@@ -51,11 +55,19 @@ typedef struct {
 typedef struct {
     int *frames;
     int num_frames;
+    float speed;
+    bool disabled;
+
+    // internal use;
     int index;
     float time_since_last_frame;
-} we_animation;
+} we_animation, we_oneway_anim;
 
 int *we_anim_frames(int num, int *frames_arr);
+
+typedef struct {
+    we_script_callback on_update;
+} we_script;
 
 #define WE_C(c) ECS_COMPONENT(we_get_world(), c)
 
@@ -65,4 +77,6 @@ int *we_anim_frames(int num, int *frames_arr);
     WE_C(we_transform);                                                        \
     WE_C(we_map);                                                              \
     WE_C(we_spritesheet);                                                      \
-    WE_C(we_animation)
+    WE_C(we_animation);                                                        \
+    WE_C(we_oneway_anim);                                                      \
+    WE_C(we_script)
