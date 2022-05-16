@@ -21,7 +21,7 @@ void we_animate_system(ecs_iter_t *it) {
 
         we_animation an = animation[i];
 
-        if (an.disabled)
+        if (an.disabled || an.num_frames == 0 || an.frames == NULL)
             continue;
 
         ecs_id_t entity = it->entities[i];

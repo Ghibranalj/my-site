@@ -29,11 +29,7 @@ void player_init(ecs_world_t *world) {
              .height = 21});
 
     ecs_add(world, player, we_animation);
-    ecs_set(world, player, we_animation,
-            {.frames = we_anim_frames(2, (int[]){5, 6}),
-             .num_frames = 2,
-             .disabled = false,
-             .speed = 5});
+    ecs_set(world, player, we_animation, {.speed = 5});
 
     WE_C(we_script);
     ecs_add(world, player, we_script);
