@@ -21,4 +21,6 @@ void we_script_system(ecs_iter_t *it);
 void we_on_delete_anim(ecs_iter_t *it);
 void we_on_delete_oneway_anim(ecs_iter_t *it);
 
+void we_on_mngr_set(ecs_iter_t *it);
+
 void we_init_map();

@@ -104,6 +104,8 @@ void we_ecs_init_triggers() {
     ECS_TRIGGER(we_world, we_on_delete_oneway_anim, EcsOnRemove,
                 we_oneway_anim);
 
+    ECS_TRIGGER(we_world, we_on_mngr_set, EcsOnSet, we_anim_manager);
+
     // TODO add trigger for delete spritesheet
 }
 

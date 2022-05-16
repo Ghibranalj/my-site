@@ -1,7 +1,7 @@
 root = "."
 
 [build]
-cmd="make all -s"
+cmd="clear ; make all -s"
 include_ext = ["c", "h", "png", "tmx"]
 exclude_file = ["resources/tmx.ldtk"]
 delay = 600

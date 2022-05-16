@@ -58,12 +58,23 @@ typedef struct {
     float speed;
     bool disabled;
 
-    // internal use;
+    // internal use
     int index;
     float time_since_last_frame;
 } we_animation, we_oneway_anim;
 
+typedef struct {
+    int **animations;
+    int *length_of_animations;
+    int len;
+    int index;
+} we_anim_manager;
+
+int **we_animations(int len);
+
 int *we_anim_frames(int num, int *frames_arr);
+
+void we_change_anim_mngr_index(ecs_world_t *world, ecs_id_t entity, int index);
 
 typedef struct {
     we_script_callback on_update;
@@ -79,4 +90,5 @@ typedef struct {
     WE_C(we_spritesheet);                                                      \
     WE_C(we_animation);                                                        \
     WE_C(we_oneway_anim);                                                      \
-    WE_C(we_script)
+    WE_C(we_script);                                                           \
+    WE_C(we_anim_manager)
