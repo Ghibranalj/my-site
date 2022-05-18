@@ -7,6 +7,7 @@
 #include <raylib.h>
 
 #include "engine.h"
+
 #include "include/webengine.h"
 
 // global variable declarations
@@ -45,16 +46,7 @@ ecs_world_t *we_get_world() {
 
 // local functions
 
-Camera2D we_camera;
-
 void we_init() {
-
-    we_camera = (Camera2D){
-        .offset = {0, 0},
-        .zoom = 4,
-        .rotation = 0,
-        .target = {100, 100},
-    };
 
     we_ecs_init();
 
@@ -62,7 +54,7 @@ void we_init() {
     InitAudioDevice();
     InitWindow(we_game->width, we_game->height, we_game->title);
     we_init_map();
-
+    we_init_camera();
     we_game->on_init();
 }
 
@@ -114,19 +106,12 @@ void we_update() {
     float delta = GetFrameTime();
     we_game->on_update(delta);
 
-    if (IsKeyDown(KEY_LEFT))
-        we_camera.target.x -= 5;
-    if (IsKeyDown(KEY_UP))
-        we_camera.target.y -= 5;
-    if (IsKeyDown(KEY_RIGHT))
-        we_camera.target.x += 5;
-    if (IsKeyDown(KEY_DOWN))
-        we_camera.target.y += 5;
-
     //
     BeginDrawing();
     //
-    BeginMode2D(we_camera);
+    WE_C(we_camera);
+    const we_camera *cam = ecs_singleton_get(we_world, we_camera);
+    BeginMode2D(*(cam->camera));
     ecs_progress(we_world, delta);
     EndMode2D();
 
@@ -136,5 +121,6 @@ void we_update() {
 
 void we_destroy() {
     we_game->on_destroy();
+    we_destoy_camera();
     ecs_fini(we_world);
 }

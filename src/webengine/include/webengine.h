@@ -80,6 +80,12 @@ typedef struct {
     we_script_callback on_update;
 } we_script;
 
+typedef struct {
+    Camera2D *camera;
+} we_camera;
+
+Camera2D *we_get_camera();
+
 #define WE_C(c) ECS_COMPONENT(we_get_world(), c)
 
 // must be called before using any components in any way

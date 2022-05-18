@@ -24,3 +24,6 @@ void we_on_delete_oneway_anim(ecs_iter_t *it);
 void we_on_mngr_set(ecs_iter_t *it);
 
 void we_init_map();
+
+void we_init_camera();
+void we_destoy_camera();

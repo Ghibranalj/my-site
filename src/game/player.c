@@ -79,4 +79,10 @@ void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
         we_change_anim_mngr_index(world, entity, index);
         ecs_set(world, entity, player_c, {.curr_anim = index});
     }
+
+    WE_C(we_transform);
+
+    const we_transform *t = ecs_get(world, entity, we_transform);
+
+    we_get_camera()->target = t->position;
 }
