@@ -102,7 +102,6 @@ void we_ecs_init_triggers() {
 }
 
 void we_update() {
-
     float delta = GetFrameTime();
     we_game->on_update(delta);
 

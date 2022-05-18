@@ -6,10 +6,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-typedef struct {
-    int curr_anim;
-} player_c;
-
 void player_update(float time, ecs_entity_t entity, ecs_world_t *world);
 
 void player_init(ecs_world_t *world) {
@@ -50,16 +46,9 @@ void player_init(ecs_world_t *world) {
                 .len = 2,
                 .index = 0,
             });
-
-    WE_C(player_c);
-    ecs_add(world, player, player_c);
-    ecs_set(world, player, player_c, {.curr_anim = 0});
 }
 
 void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
-
-    WE_C(player_c);
-    const player_c *player = ecs_get(world, entity, player_c);
 
     if (IsKeyDown(KEY_SPACE)) {
         WE_C(we_oneway_anim);
@@ -75,14 +64,23 @@ void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
     }
 
     if (IsKeyReleased(KEY_C)) {
-        int index = (player->curr_anim + 1) % 2;
-        we_change_anim_mngr_index(world, entity, index);
-        ecs_set(world, entity, player_c, {.curr_anim = index});
+        we_change_anim_mngr_index(world, entity, 1);
     }
 
     WE_C(we_transform);
 
     const we_transform *t = ecs_get(world, entity, we_transform);
+    we_lerp_camera(t->position.x, t->position.y, 10);
+    we_zoom_camera(5);
 
-    we_get_camera()->target = t->position;
+    if (IsKeyDown(KEY_A)) {
+        ecs_set(world, entity, we_transform,
+                {.position = {t->position.x - 1, t->position.y}});
+    }
+    if (IsKeyDown(KEY_D)) {
+        ecs_set(world, entity, we_transform,
+                {.position = {t->position.x + 1, t->position.y}});
+    }
+
+    float fps = GetFPS();
 }
