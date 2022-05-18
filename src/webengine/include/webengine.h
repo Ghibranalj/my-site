@@ -1,6 +1,7 @@
 #pragma once
 #include <flecs.h>
 #include <raylib.h>
+#include <raymath.h>
 #include <stdbool.h>
 #include <tmx.h>
 
@@ -84,5 +85,7 @@ Camera2D *we_get_camera();
 void we_center_camera(float x, float y);
 void we_zoom_camera(float zoom);
 void we_lerp_camera(float x, float y, float speed);
+
+Vector2 we_get_axis();
 
 #define WE_C(c) ECS_COMPONENT(we_get_world(), c)

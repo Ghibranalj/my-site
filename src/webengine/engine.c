@@ -66,6 +66,8 @@ void we_ecs_init() {
 
     // register all triggers
     we_ecs_init_triggers();
+
+    we_input_init();
 }
 
 void we_ecs_init_systems() {
@@ -104,6 +106,7 @@ void we_ecs_init_triggers() {
 void we_update() {
     float delta = GetFrameTime();
     we_game->on_update(delta);
+    we_update_input();
 
     //
     BeginDrawing();

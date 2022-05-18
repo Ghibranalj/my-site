@@ -73,14 +73,6 @@ void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
     we_lerp_camera(t->position.x, t->position.y, 10);
     we_zoom_camera(5);
 
-    if (IsKeyDown(KEY_A)) {
-        ecs_set(world, entity, we_transform,
-                {.position = {t->position.x - 1, t->position.y}});
-    }
-    if (IsKeyDown(KEY_D)) {
-        ecs_set(world, entity, we_transform,
-                {.position = {t->position.x + 1, t->position.y}});
-    }
-
-    float fps = GetFPS();
+    ecs_set(world, entity, we_transform,
+            {.position = Vector2Add(t->position, we_get_axis())});
 }

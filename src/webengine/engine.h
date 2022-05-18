@@ -31,6 +31,8 @@ void we_destoy_camera();
 
 Vector2 we_v2_lerp(Vector2 a, Vector2 b, float l);
 
+void we_input_init();
+void we_update_input();
 // must be called before using any components in any way
 #define _WE_RAC()                                                              \
     WE_C(we_sprite);                                                           \
@@ -44,7 +46,7 @@ Vector2 we_v2_lerp(Vector2 a, Vector2 b, float l);
 
 typedef struct {
     Vector2 axis;
-} we_input_axis;
+} we_input;
 
 typedef struct {
     Camera2D *camera;
