@@ -88,4 +88,16 @@ void we_lerp_camera(float x, float y, float speed);
 
 Vector2 we_get_axis();
 
+typedef struct _we_coll_bounds {
+    Rectangle rec;
+    struct _we_coll_bounds *next;
+} we_coll_bounds;
+
+typedef struct {
+    we_coll_bounds *head;
+} we_coll_map;
+
+we_coll_bounds *we_get_collision_bounds(tmx_map *map);
+void we_draw_collision_bounds(we_coll_bounds *head);
+
 #define WE_C(c) ECS_COMPONENT(we_get_world(), c)

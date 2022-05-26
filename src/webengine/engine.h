@@ -2,6 +2,9 @@
 #include "flecs.h"
 #include "raylib.h"
 
+#define COLLISION_LAYER_NAME "_we_collision"
+#define MAX_COLLISION_REC 10240
+
 // system
 void we_draw_system(ecs_iter_t *it);
 void we_on_delete_sprite(ecs_iter_t *it);
@@ -28,8 +31,6 @@ void we_init_map();
 
 void we_init_camera();
 void we_destoy_camera();
-
-Vector2 we_v2_lerp(Vector2 a, Vector2 b, float l);
 
 void we_input_init();
 void we_update_input();

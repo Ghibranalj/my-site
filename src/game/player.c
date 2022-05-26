@@ -1,9 +1,5 @@
 #include "webengine.h"
-#include <flecs.h>
-#include <raylib.h>
-#include <stdlib.h>
 
-#include <stdbool.h>
 #include <stdio.h>
 
 void player_update(float time, ecs_entity_t entity, ecs_world_t *world);

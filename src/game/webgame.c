@@ -13,6 +13,7 @@ void webgame_destroy(void);
 
 void player_update(float time, ecs_entity_t entity, ecs_world_t *world);
 
+we_coll_bounds *head;
 //
 
 we_game_t webgame = {
@@ -40,8 +41,14 @@ void webgame_init() {
     ecs_set(world, e, we_map, {.map = map});
 
     player_init(world);
+
+    head = we_get_collision_bounds(map);
+
+    printf("%p\n", head);
 }
 
-void webgame_update(float delta) {}
+void webgame_update(float delta) {
+    we_draw_collision_bounds(head);
+}
 
 void webgame_destroy() {}

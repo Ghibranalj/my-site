@@ -4,8 +4,11 @@
 #include <flecs.h>
 #include <raylib.h>
 #include <raymath.h>
+#include <stdbool.h>
 
 #include <stdio.h>
+
+#define INPUT_LERP_SPEED 100
 
 void we_input_init() {
     ecs_world_t *world = we_get_world();
@@ -35,7 +38,8 @@ void we_update_input() {
 
     Vector2 axis = inp->axis;
 
-    axis = we_v2_lerp(axis, n_axis, 100 * GetFrameTime());
+    // axis = we_v2_lerp(axis, n_axis, INPUT_LERP_SPEED * GetFrameTime());
+    axis = Vector2Lerp(axis, n_axis, INPUT_LERP_SPEED * GetFrameTime());
 
     ecs_singleton_set(we_get_world(), we_input, {.axis = axis});
 }
@@ -44,4 +48,12 @@ Vector2 we_get_axis() {
     WE_C(we_input);
     const we_input *inp = ecs_singleton_get(we_get_world(), we_input);
     return inp->axis;
+}
+
+bool we_is_input() {
+    WE_C(we_input);
+    const we_input *inp = ecs_singleton_get(we_get_world(), we_input);
+    Vector2 axis = inp->axis;
+
+    return axis.x != 0 || axis.y != 0;
 }

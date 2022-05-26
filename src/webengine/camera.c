@@ -55,7 +55,7 @@ void we_lerp_camera(float x, float y, float speed) {
     Camera2D *cam = we_get_camera();
     float delta = GetFrameTime();
 
-    Vector2 t = we_v2_lerp(cam->target, (Vector2){x, y}, delta * speed);
+    Vector2 t = Vector2Lerp(cam->target, (Vector2){x, y}, delta * speed);
     we_center_camera(t.x, t.y);
 }
 

@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <strings.h>
 
 #include <raylib.h>
 #include <tmx.h>
 
+#include "engine.h"
 #include "include/webengine.h"
 
 void *raylib_tex_loader(const char *path) {
@@ -58,6 +60,7 @@ void draw_objects(tmx_object_group *objgr) {
 
     while (head) {
         if (head->visible) {
+
             if (head->obj_type == OT_SQUARE) {
                 DrawRectangleLinesEx(
                     (Rectangle){head->x, head->y, head->width, head->height},
@@ -126,22 +129,39 @@ void draw_layer(tmx_map *map, tmx_layer *layer) {
 
 void draw_all_layers(tmx_map *map, tmx_layer *layers) {
     while (layers) {
-        if (layers->visible) {
 
-            if (layers->type == L_GROUP) {
-                draw_all_layers(map,
-                                layers->content.group_head); // recursive call
-            } else if (layers->type == L_OBJGR) {
-                draw_objects(
-                    layers->content.objgr); // Function to be implemented
-            } else if (layers->type == L_IMAGE) {
-                draw_image_layer(
-                    layers->content.image); // Function to be implemented
-            } else if (layers->type == L_LAYER) {
-                draw_layer(map, layers); // Function to be implemented
-            }
+        if (!layers->visible) {
+            layers = layers->next;
+            continue;
         }
-        layers = layers->next;
+        if (strcasecmp(layers->name, COLLISION_LAYER_NAME) == 0) {
+            layers = layers->next;
+            continue;
+        }
+        // recursive call
+        if (layers->type == L_GROUP) {
+            draw_all_layers(map, layers->content.group_head);
+            layers = layers->next;
+            continue;
+        }
+
+        if (layers->type == L_OBJGR) {
+            draw_objects(layers->content.objgr);
+            layers = layers->next;
+            continue;
+        }
+
+        if (layers->type == L_IMAGE) {
+            draw_image_layer(layers->content.image);
+            layers = layers->next;
+            continue;
+        }
+
+        if (layers->type == L_LAYER) {
+            draw_layer(map, layers);
+            layers = layers->next;
+            continue;
+        }
     }
 }
 

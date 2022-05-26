@@ -105,7 +105,7 @@ void we_ecs_init_triggers() {
 
 void we_update() {
     float delta = GetFrameTime();
-    we_game->on_update(delta);
+
     we_update_input();
 
     //
@@ -115,6 +115,7 @@ void we_update() {
     const we_camera *cam = ecs_singleton_get(we_world, we_camera);
     BeginMode2D(*(cam->camera));
     ecs_progress(we_world, delta);
+    we_game->on_update(delta);
     EndMode2D();
 
     //
