@@ -13,7 +13,7 @@ void webgame_destroy(void);
 
 void player_update(float time, ecs_entity_t entity, ecs_world_t *world);
 
-we_coll_bounds *head;
+we_map_coll_bounds *head;
 //
 
 we_game_t webgame = {
@@ -36,14 +36,17 @@ void webgame_init() {
 
     tmx_map *map = tmx_load(WE_MAP_LOCATION "0001_Level_0.tmx");
     WE_C(we_map);
-    ecs_entity_t e = ecs_new_id(world);
-    ecs_add(world, e, we_map);
-    ecs_set(world, e, we_map, {.map = map});
+    ecs_entity_t mape = ecs_new_id(world);
+    ecs_add(world, mape, we_map);
+    ecs_set(world, mape, we_map, {.map = map});
 
     player_init(world);
 
     head = we_get_collision_bounds(map);
 
+    WE_C(we_coll_map);
+    ecs_add(world, mape, we_coll_map);
+    ecs_set(world, mape, we_coll_map, {.head = head});
     printf("%p\n", head);
 }
 

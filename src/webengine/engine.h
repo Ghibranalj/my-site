@@ -34,6 +34,11 @@ void we_destoy_camera();
 
 void we_input_init();
 void we_update_input();
+
+void we_init_collision();
+
+void we_collision_system(ecs_iter_t *it);
+
 // must be called before using any components in any way
 #define _WE_RAC()                                                              \
     WE_C(we_sprite);                                                           \
@@ -43,7 +48,9 @@ void we_update_input();
     WE_C(we_animation);                                                        \
     WE_C(we_oneway_anim);                                                      \
     WE_C(we_script);                                                           \
-    WE_C(we_anim_manager)
+    WE_C(we_anim_manager);                                                     \
+    WE_C(we_coll_map);                                                         \
+    WE_C(we_coll_bound)
 
 typedef struct {
     Vector2 axis;

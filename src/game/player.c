@@ -42,6 +42,10 @@ void player_init(ecs_world_t *world) {
                 .len = 2,
                 .index = 0,
             });
+
+    WE_C(we_coll_bound);
+    ecs_add(world, player, we_coll_bound);
+    ecs_set(world, player, we_coll_bound, {.width = 16, .height = 21});
 }
 
 void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
@@ -71,4 +75,8 @@ void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
 
     ecs_set(world, entity, we_transform,
             {.position = Vector2Add(t->position, we_get_axis())});
+
+    Rectangle bounds = {
+        .x = t->position.x, .y = t->position.y, .width = 16, .height = 21};
+    DrawRectangleLinesEx(bounds, 2, YELLOW);
 }
