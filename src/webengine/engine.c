@@ -54,8 +54,8 @@ void we_init() {
     InitAudioDevice();
     InitWindow(we_game->width, we_game->height, we_game->title);
     we_init_map();
-    we_init_collision();
     we_init_camera();
+    we_physics_init();
     we_game->on_init();
 }
 
@@ -85,9 +85,8 @@ void we_ecs_init_systems() {
                we_spritesheet);
 
     ECS_SYSTEM(we_world, we_script_system, EcsOnUpdate, we_script);
-
-    ECS_SYSTEM(we_world, we_collision_system, EcsOnUpdate, we_transform,
-               we_coll_bound);
+    ECS_SYSTEM(we_world, we_physics_body_system, EcsOnUpdate, we_physics_body,
+               we_transform);
 }
 //
 void we_ecs_init_triggers() {
@@ -104,6 +103,9 @@ void we_ecs_init_triggers() {
 
     ECS_TRIGGER(we_world, we_on_mngr_set, EcsOnSet, we_anim_manager);
 
+    ECS_TRIGGER(we_world, we_coll_map_on_set, EcsOnSet, we_coll_map);
+
+    ECS_TRIGGER(we_world, we_physics_body_on_set, EcsOnSet, we_physics_body);
     // TODO add trigger for delete spritesheet
 }
 
@@ -111,7 +113,7 @@ void we_update() {
     float delta = GetFrameTime();
 
     we_update_input();
-
+    we_physics_update();
     //
     BeginDrawing();
     //
@@ -119,9 +121,10 @@ void we_update() {
     const we_camera *cam = ecs_singleton_get(we_world, we_camera);
     BeginMode2D(*(cam->camera));
     ecs_progress(we_world, delta);
+    // we_physics_draw_all_bodies();
     we_game->on_update(delta);
     EndMode2D();
-
+    DrawFPS(10, 10);
     //
     EndDrawing();
 }

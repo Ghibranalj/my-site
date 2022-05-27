@@ -47,7 +47,7 @@ void webgame_init() {
     WE_C(we_coll_map);
     ecs_add(world, mape, we_coll_map);
     ecs_set(world, mape, we_coll_map, {.head = head});
-    printf("%p\n", head);
+    // printf("%p\n", head);
 }
 
 void webgame_update(float delta) {

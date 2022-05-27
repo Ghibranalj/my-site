@@ -42,10 +42,15 @@ void player_init(ecs_world_t *world) {
                 .len = 2,
                 .index = 0,
             });
-
-    WE_C(we_coll_bound);
-    ecs_add(world, player, we_coll_bound);
-    ecs_set(world, player, we_coll_bound, {.width = 16, .height = 21});
+    frShape *sp = frCreateRectangle((frMaterial){0.75f, 0.0f, 0.75f, 0.5f},
+                                    frNumberPixelsToMeters(16),
+                                    frNumberPixelsToMeters(21));
+    frBody *body =
+        frCreateBodyFromShape(FR_BODY_DYNAMIC, FR_FLAG_NONE,
+                              frVec2PixelsToMeters((Vector2){100, 100}), sp);
+    WE_C(we_physics_body);
+    ecs_add(world, player, we_physics_body);
+    ecs_set(world, player, we_physics_body, {.body = body});
 }
 
 void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
@@ -76,7 +81,10 @@ void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
     ecs_set(world, entity, we_transform,
             {.position = Vector2Add(t->position, we_get_axis())});
 
-    Rectangle bounds = {
-        .x = t->position.x, .y = t->position.y, .width = 16, .height = 21};
-    DrawRectangleLinesEx(bounds, 2, YELLOW);
+    WE_C(we_physics_body);
+    Vector2 inp = frVec2ScalarMultiply(we_get_axis(), 0.1);
+    const we_physics_body *bod = ecs_get(world, entity, we_physics_body);
+    Vector2 pos = frGetBodyPosition(bod->body);
+    frSetBodyVelocity(bod->body, frVec2PixelsToMeters(inp));
+    // frApplyImpulse(bod->body, frVec2PixelsToMeters(inp));
 }

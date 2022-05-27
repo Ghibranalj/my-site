@@ -2,11 +2,15 @@
 #include <stdlib.h>
 #include <strings.h>
 
+#include <ferox.h>
+#include <flecs.h>
 #include <raylib.h>
 #include <tmx.h>
 
 #include "engine.h"
 #include "include/webengine.h"
+
+#define COLL_MAP_MATERIAL ((frMaterial){0, 0, 0, 0})
 
 tmx_layer *get_layer(tmx_map *map, const char *name) {
     tmx_layer *layer = map->ly_head;
@@ -46,37 +50,55 @@ we_map_coll_bounds *we_get_collision_bounds(tmx_map *map) {
             w = ts->tile_width;
             h = ts->tile_height;
 
+            Vector2 pos = {(j * 16) + (w / 2), (i * 16) + (h / 2)};
+
             // add to linked list
             we_map_coll_bounds *new_node = malloc(sizeof(we_map_coll_bounds));
-            Rectangle rec = (Rectangle){
-                .x = j * 16,
-                .y = i * 16,
-                .width = w,
-                .height = h,
-            };
-
-            new_node->rec = rec;
-            new_node->rec = rec;
+            frBody *body = frCreateBodyFromShape(
+                FR_BODY_STATIC, FR_FLAG_INFINITE_MASS,
+                frVec2PixelsToMeters(pos),
+                frCreateRectangle(COLL_MAP_MATERIAL, frNumberPixelsToMeters(w),
+                                  frNumberPixelsToMeters(h)));
+            new_node->body = body;
             new_node->next = NULL;
             if (head == NULL) {
                 head = new_node;
                 first_head = new_node;
-
                 continue;
             }
+            count++;
 
             head->next = new_node;
             head = new_node;
         }
     }
 
+    printf("%d collision bodies\n", count);
+
     return first_head;
 }
 
 void we_draw_collision_bounds(we_map_coll_bounds *head) {
     while (head) {
-        Rectangle rec = head->rec;
-        DrawRectangleLinesEx(rec, 1, GREEN);
+        // Rectangle rec = head->rec;
+        // DrawRectangleLinesEx(rec, 1, GREEN);
         head = head->next;
+    }
+}
+
+void we_coll_map_on_set(ecs_iter_t *it) {
+    we_coll_map *maps = ecs_term(it, we_coll_map, 1);
+
+    int count = it->count;
+    for (int i = 0; i < count; i++) {
+        we_coll_map map = maps[i];
+
+        we_map_coll_bounds *bounds = map.head;
+
+        while (bounds) {
+            frBody *body = bounds->body;
+            we_physics_add_to_world(body);
+            bounds = bounds->next;
+        }
     }
 }

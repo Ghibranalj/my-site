@@ -39,7 +39,7 @@ void we_update_input() {
     Vector2 axis = inp->axis;
 
     // axis = we_v2_lerp(axis, n_axis, INPUT_LERP_SPEED * GetFrameTime());
-    axis = Vector2Lerp(axis, n_axis, INPUT_LERP_SPEED * GetFrameTime());
+    axis = Vector2Lerp(axis, n_axis, INPUT_LERP_SPEED * 0.0166);
 
     ecs_singleton_set(we_get_world(), we_input, {.axis = axis});
 }
