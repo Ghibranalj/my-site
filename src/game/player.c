@@ -8,6 +8,7 @@ void player_init(ecs_world_t *world) {
     WE_C(we_transform);
     WE_C(we_spritesheet);
     WE_C(we_animation);
+    WE_C(we_physics_body);
 
     ecs_id_t player = ecs_new_id(world);
     ecs_add(world, player, we_transform);
@@ -42,10 +43,13 @@ void player_init(ecs_world_t *world) {
                 .len = 2,
                 .index = 0,
             });
+    ecs_add(world, player, we_physics_body);
 
-    WE_C(we_coll_bound);
-    ecs_add(world, player, we_coll_bound);
-    ecs_set(world, player, we_coll_bound, {.width = 16, .height = 21});
+    PhysicsBody body =
+        CreatePhysicsBodyRectangle((Vector2){.x = 100, .y = 100}, 16, 21, 1);
+    body->useGravity = false;
+    body->freezeOrient = true;
+    ecs_set(world, player, we_physics_body, {.body = body});
 }
 
 void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
@@ -76,7 +80,8 @@ void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
     ecs_set(world, entity, we_transform,
             {.position = Vector2Add(t->position, we_get_axis())});
 
-    Rectangle bounds = {
-        .x = t->position.x, .y = t->position.y, .width = 16, .height = 21};
-    DrawRectangleLinesEx(bounds, 2, YELLOW);
+    WE_C(we_physics_body);
+    PhysicsBody body = ecs_get(world, entity, we_physics_body)->body;
+    body->position = Vector2Add(body->position, we_get_axis());
+    we_draw_physics_body(body);
 }

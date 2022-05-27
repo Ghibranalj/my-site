@@ -51,10 +51,13 @@ void we_init() {
     we_ecs_init();
 
     SetTargetFPS(we_game->fps);
-    InitAudioDevice();
     InitWindow(we_game->width, we_game->height, we_game->title);
+    InitAudioDevice();
+    SetPhysicsTimeStep(1.0 / 30.0 / 10.0 * 1000);
+    InitPhysics();
+    SetPhysicsGravity(0, 0);
+
     we_init_map();
-    we_init_collision();
     we_init_camera();
     we_game->on_init();
 }
@@ -86,8 +89,8 @@ void we_ecs_init_systems() {
 
     ECS_SYSTEM(we_world, we_script_system, EcsOnUpdate, we_script);
 
-    ECS_SYSTEM(we_world, we_collision_system, EcsOnUpdate, we_transform,
-               we_coll_bound);
+    ECS_SYSTEM(we_world, we_physics_body_transform_system, EcsOnUpdate,
+               we_physics_body, we_transform);
 }
 //
 void we_ecs_init_triggers() {
@@ -108,26 +111,35 @@ void we_ecs_init_triggers() {
 }
 
 void we_update() {
+
+    WE_C(we_camera);
+    const we_camera *cam = ecs_singleton_get(we_world, we_camera);
+
     float delta = GetFrameTime();
 
     we_update_input();
 
+    UpdatePhysics();
     //
     BeginDrawing();
     //
-    WE_C(we_camera);
-    const we_camera *cam = ecs_singleton_get(we_world, we_camera);
+
     BeginMode2D(*(cam->camera));
+
     ecs_progress(we_world, delta);
+
     we_game->on_update(delta);
     EndMode2D();
 
-    //
+    DrawFPS(10, 10);
+
+    // aw
     EndDrawing();
 }
 
 void we_destroy() {
     we_game->on_destroy();
+    ClosePhysics();
     we_destoy_camera();
     ecs_fini(we_world);
 }

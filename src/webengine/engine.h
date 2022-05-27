@@ -2,6 +2,8 @@
 #include "flecs.h"
 #include "raylib.h"
 
+#include <physac.h>
+
 #define COLLISION_LAYER_NAME "_we_collision"
 #define MAX_COLLISION_REC 10240
 
@@ -35,9 +37,9 @@ void we_destoy_camera();
 void we_input_init();
 void we_update_input();
 
-void we_init_collision();
-
 void we_collision_system(ecs_iter_t *it);
+
+void we_physics_body_transform_system(ecs_iter_t *it);
 
 // must be called before using any components in any way
 #define _WE_RAC()                                                              \
@@ -50,7 +52,7 @@ void we_collision_system(ecs_iter_t *it);
     WE_C(we_script);                                                           \
     WE_C(we_anim_manager);                                                     \
     WE_C(we_coll_map);                                                         \
-    WE_C(we_coll_bound)
+    WE_C(we_physics_body)
 
 typedef struct {
     Vector2 axis;

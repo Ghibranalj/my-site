@@ -1,6 +1,8 @@
 #pragma once
-#include <flecs.h>
 #include <raylib.h>
+
+#include <flecs.h>
+#include <physac.h>
 #include <raymath.h>
 #include <stdbool.h>
 #include <tmx.h>
@@ -46,6 +48,10 @@ typedef struct {
     Vector2 position;
 } we_transform;
 
+typedef struct {
+    PhysicsBody body;
+} we_physics_body;
+
 // automatically prefixed
 #define WE_MAP_LOCATION "resources/tmx/tiled/"
 
@@ -89,7 +95,7 @@ void we_lerp_camera(float x, float y, float speed);
 Vector2 we_get_axis();
 
 typedef struct _we_coll_bounds {
-    Rectangle rec;
+    PhysicsBody body;
     struct _we_coll_bounds *next;
 } we_map_coll_bounds;
 
@@ -100,8 +106,10 @@ typedef struct {
 we_map_coll_bounds *we_get_collision_bounds(tmx_map *map);
 void we_draw_collision_bounds(we_map_coll_bounds *head);
 
-typedef struct {
-    float width, height;
-} we_coll_bound;
+// typedef struct {
+//     float width, height;
+// } we_coll_bound;
 
 #define WE_C(c) ECS_COMPONENT(we_get_world(), c)
+
+void we_draw_physics_body(PhysicsBody body);

@@ -48,15 +48,13 @@ we_map_coll_bounds *we_get_collision_bounds(tmx_map *map) {
 
             // add to linked list
             we_map_coll_bounds *new_node = malloc(sizeof(we_map_coll_bounds));
-            Rectangle rec = (Rectangle){
-                .x = j * 16,
-                .y = i * 16,
-                .width = w,
-                .height = h,
+            Vector2 pos = (Vector2){
+                .x = (j * 16) + (w / 2),
+                .y = (i * 16) + (h / 2),
             };
-
-            new_node->rec = rec;
-            new_node->rec = rec;
+            new_node->body = CreatePhysicsBodyRectangle(pos, w, h, 1);
+            new_node->body->enabled = false;
+            // new_node->body->useGravity = false;
             new_node->next = NULL;
             if (head == NULL) {
                 head = new_node;
@@ -75,8 +73,10 @@ we_map_coll_bounds *we_get_collision_bounds(tmx_map *map) {
 
 void we_draw_collision_bounds(we_map_coll_bounds *head) {
     while (head) {
-        Rectangle rec = head->rec;
-        DrawRectangleLinesEx(rec, 1, GREEN);
+        PhysicsBody body = head->body;
+
+        we_draw_physics_body(body);
+
         head = head->next;
     }
 }

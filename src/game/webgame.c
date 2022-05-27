@@ -20,7 +20,7 @@ we_game_t webgame = {
     .title = "webgame",
     .width = 800,
     .height = 600,
-    .fps = 120,
+    .fps = 60,
     .on_update = &webgame_update,
     .on_init = &webgame_init,
     .on_destroy = &webgame_destroy,
@@ -47,11 +47,14 @@ void webgame_init() {
     WE_C(we_coll_map);
     ecs_add(world, mape, we_coll_map);
     ecs_set(world, mape, we_coll_map, {.head = head});
-    printf("%p\n", head);
 }
 
 void webgame_update(float delta) {
     we_draw_collision_bounds(head);
+
+    // DrawRectangleLinesEx((Rectangle){.x = 0, .y = 0, .width = 16, .height =
+    // 16},
+    //                      2, RED);
 }
 
 void webgame_destroy() {}
