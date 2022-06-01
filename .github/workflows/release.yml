@@ -31,6 +31,20 @@ jobs : {
         run : 'make release'
       },
       {
+        name: Installing Binaryen,
+        run : 'sudo apt-get install binaryen'
+      },
+      {
+        name: Optimizing wasm for size,
+        run: "
+          cd docs;
+          wasm-opt index.wasm -o output.wasm -Oz;
+          mv output.wasm index.wasm;
+          chmod +x index.wasm;
+          cd -;
+        "
+      },
+      {
         name: Commit Files,
         run : "
           git config --local user.email \"41898282+github-actions[bot]@users.noreply.github.com\";
