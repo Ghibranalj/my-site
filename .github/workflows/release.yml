@@ -38,7 +38,7 @@ jobs : {
         name: Optimizing wasm for size,
         run: "
           cd docs;
-          wasm-opt index.wasm -o output.wasm -Oz;
+          wasm-opt index.wasm -o output.wasm -Oz --disable-exception-handling --vacuum;
           mv output.wasm index.wasm;
           chmod +x index.wasm;
           cd -;
