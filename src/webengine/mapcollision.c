@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <strings.h>
 
-#include <chipmunk.h>
 #include <raylib.h>
 #include <tmx.h>
 
