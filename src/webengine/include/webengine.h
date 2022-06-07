@@ -5,7 +5,6 @@
 #include <stdbool.h>
 #include <tmx.h>
 
-#include "animations.h"
 #include "camera.h"
 #include "collisions.h"
 #include "graphics.h"
@@ -57,7 +56,7 @@ typedef struct {
 } we_script;
 
 typedef struct {
-    Rectangle rec;
+    Rectangle bound;
 } we_collidable;
 
 typedef struct {

@@ -2,7 +2,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-#include "include/webengine.h"
+#include "../include/webengine.h"
 
 void we_draw_system(ecs_iter_t *it) {
     we_sprite *sprite = ecs_term(it, we_sprite, 1);

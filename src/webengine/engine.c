@@ -7,7 +7,7 @@
 #include <raylib.h>
 
 #include "engine.h"
-#include "physics.h"
+#include "physics/physics.h"
 
 #include "include/webengine.h"
 

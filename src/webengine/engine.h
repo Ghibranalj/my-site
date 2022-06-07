@@ -2,7 +2,7 @@
 #include <flecs.h>
 #include <raylib.h>
 
-#include "map.h"
+#include "map/map.h"
 
 #define COLLISION_LAYER_NAME "_we_collision"
 #define MAX_COLLISION_REC 10240

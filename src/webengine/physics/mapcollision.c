@@ -6,8 +6,8 @@
 #include <raylib.h>
 #include <tmx.h>
 
-#include "engine.h"
-#include "include/webengine.h"
+#include "../engine.h"
+#include "../include/webengine.h"
 
 tmx_layer *get_layer(tmx_map *map, const char *name) {
     tmx_layer *layer = map->ly_head;
@@ -77,5 +77,3 @@ void we_draw_collision_bounds(we_map_coll_bounds *head) {
         node = node->next;
     }
 }
-
-void we_map_coll_system(ecs_iter_t *it) {}
