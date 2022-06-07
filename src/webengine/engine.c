@@ -7,6 +7,7 @@
 #include <raylib.h>
 
 #include "engine.h"
+#include "physics/collision.h"
 #include "physics/physics.h"
 
 #include "include/webengine.h"
@@ -54,6 +55,7 @@ void we_init() {
     InitAudioDevice();
     InitWindow(we_game->width, we_game->height, we_game->title);
     we_init_map();
+    init_collision();
     we_init_camera();
     we_game->on_init();
 }
@@ -87,6 +89,9 @@ void we_ecs_init_systems() {
 
     ECS_SYSTEM(we_world, we_movable_system, EcsOnUpdate, we_movable,
                we_transform);
+
+    ECS_SYSTEM(we_world, we_map_coll_system, EcsOnUpdate, we_collidable,
+               we_movable, we_transform);
 }
 //
 void we_ecs_init_triggers() {

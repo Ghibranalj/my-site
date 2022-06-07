@@ -56,6 +56,8 @@ we_map_coll_bounds *we_get_collision_bounds(tmx_map *map) {
                 .height = h,
             };
 
+            new_node->next = NULL;
+
             if (head == NULL) {
                 head = new_node;
                 first_head = head;
@@ -72,6 +74,7 @@ we_map_coll_bounds *we_get_collision_bounds(tmx_map *map) {
 
 void we_draw_collision_bounds(we_map_coll_bounds *head) {
     we_map_coll_bounds *node = head;
+
     while (node) {
         DrawRectangleLinesEx(node->bound, 1, RED);
         node = node->next;

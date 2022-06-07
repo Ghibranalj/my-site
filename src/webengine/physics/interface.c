@@ -44,8 +44,8 @@ void we_collidable_add(ecs_world_t *world, ecs_id_t entity) {
     ecs_add(world, entity, we_collidable);
 }
 
-void we_collidable_set_bound(ecs_world_t *world, ecs_id_t entity,
-                             Rectangle bound) {
+void we_collidable_set(ecs_world_t *world, ecs_id_t entity, int width,
+                       int height) {
     WE_C(we_collidable);
-    ecs_set(world, entity, we_collidable, {.bound = bound});
+    ecs_set(world, entity, we_collidable, {.width = width, .height = height});
 }

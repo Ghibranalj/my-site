@@ -1,6 +1,7 @@
 #include "webengine.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 void player_update(float time, ecs_entity_t entity, ecs_world_t *world);
 
@@ -20,7 +21,10 @@ void player_init(ecs_world_t *world) {
     we_spitesheet_set(world, player, "resources/woman.png", 16, 21, 1);
 
     ecs_add(world, player, we_animation);
-    ecs_set(world, player, we_animation, {.speed = 5});
+    ecs_set(world, player, we_animation,
+            {.speed = 5,
+             .frames = we_anim_frames(2, (int[]){5, 6}),
+             .num_frames = 2});
 
     WE_C(we_script);
     ecs_add(world, player, we_script);
@@ -41,6 +45,14 @@ void player_init(ecs_world_t *world) {
                 .len = 2,
                 .index = 0,
             });
+
+    WE_C(we_collidable);
+
+    printf("im gonna error\n");
+    ecs_add(world, player, we_collidable);
+    printf("hello world\n");
+    ecs_set(world, player, we_collidable, {.width = 16, .height = 21});
+    printf("hello world2\n");
 }
 
 void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
@@ -58,7 +70,7 @@ void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
                  .speed = 7});
     }
 
-    if (IsKeyReleased(KEY_C)) {
+    if (IsKeyDown(KEY_C)) {
         we_change_anim_mngr_index(world, entity, 1);
     }
 
@@ -68,11 +80,5 @@ void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
     we_lerp_camera(t->position.x, t->position.y, 10);
     we_zoom_camera(5);
 
-    WE_C(we_movable);
-
     we_movable_set_vel(world, entity, we_get_axis(100));
-
-    Rectangle bounds = {
-        .x = t->position.x, .y = t->position.y, .width = 16, .height = 21};
-    DrawRectangleLinesEx(bounds, 2, YELLOW);
 }

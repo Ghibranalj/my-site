@@ -56,7 +56,7 @@ typedef struct {
 } we_script;
 
 typedef struct {
-    Rectangle bound;
+    int width, height;
 } we_collidable;
 
 typedef struct {

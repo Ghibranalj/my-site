@@ -43,7 +43,8 @@ void we_update_input();
     WE_C(we_script);                                                           \
     WE_C(we_anim_manager);                                                     \
     WE_C(we_coll_map);                                                         \
-    WE_C(we_movable)
+    WE_C(we_movable);                                                          \
+    WE_C(we_collidable)
 
 typedef struct {
     Vector2 axis;
