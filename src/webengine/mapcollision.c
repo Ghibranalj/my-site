@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <strings.h>
 
+#include <chipmunk.h>
 #include <raylib.h>
 #include <tmx.h>
 
@@ -46,22 +47,18 @@ we_map_coll_bounds *we_get_collision_bounds(tmx_map *map) {
             w = ts->tile_width;
             h = ts->tile_height;
 
-            // add to linked list
             we_map_coll_bounds *new_node = malloc(sizeof(we_map_coll_bounds));
-            Rectangle rec = (Rectangle){
-                .x = j * 16,
-                .y = i * 16,
+
+            new_node->bound = (Rectangle){
+                .x = j,
+                .y = i,
                 .width = w,
                 .height = h,
             };
 
-            new_node->rec = rec;
-            new_node->rec = rec;
-            new_node->next = NULL;
             if (head == NULL) {
                 head = new_node;
-                first_head = new_node;
-
+                first_head = head;
                 continue;
             }
 
@@ -73,10 +70,4 @@ we_map_coll_bounds *we_get_collision_bounds(tmx_map *map) {
     return first_head;
 }
 
-void we_draw_collision_bounds(we_map_coll_bounds *head) {
-    while (head) {
-        Rectangle rec = head->rec;
-        DrawRectangleLinesEx(rec, 1, GREEN);
-        head = head->next;
-    }
-}
+void we_draw_collision_bounds(we_map_coll_bounds *head) {}

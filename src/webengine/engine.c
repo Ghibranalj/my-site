@@ -7,6 +7,7 @@
 #include <raylib.h>
 
 #include "engine.h"
+#include "physics.h"
 
 #include "include/webengine.h"
 
@@ -49,12 +50,10 @@ ecs_world_t *we_get_world() {
 void we_init() {
 
     we_ecs_init();
-
     SetTargetFPS(we_game->fps);
     InitAudioDevice();
     InitWindow(we_game->width, we_game->height, we_game->title);
     we_init_map();
-    we_init_collision();
     we_init_camera();
     we_game->on_init();
 }
@@ -85,9 +84,6 @@ void we_ecs_init_systems() {
                we_spritesheet);
 
     ECS_SYSTEM(we_world, we_script_system, EcsOnUpdate, we_script);
-
-    ECS_SYSTEM(we_world, we_collision_system, EcsOnUpdate, we_transform,
-               we_coll_bound);
 }
 //
 void we_ecs_init_triggers() {
@@ -122,6 +118,7 @@ void we_update() {
     we_game->on_update(delta);
     EndMode2D();
 
+    DrawFPS(10, 10);
     //
     EndDrawing();
 }

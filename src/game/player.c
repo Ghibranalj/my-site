@@ -42,10 +42,6 @@ void player_init(ecs_world_t *world) {
                 .len = 2,
                 .index = 0,
             });
-
-    WE_C(we_coll_bound);
-    ecs_add(world, player, we_coll_bound);
-    ecs_set(world, player, we_coll_bound, {.width = 16, .height = 21});
 }
 
 void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
