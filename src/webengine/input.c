@@ -44,10 +44,10 @@ void we_update_input() {
     ecs_singleton_set(we_get_world(), we_input, {.axis = axis});
 }
 
-Vector2 we_get_axis() {
+Vector2 we_get_axis(float scale) {
     WE_C(we_input);
     const we_input *inp = ecs_singleton_get(we_get_world(), we_input);
-    return inp->axis;
+    return Vector2Scale(inp->axis, scale);
 }
 
 bool we_is_input() {

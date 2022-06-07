@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <strings.h>
 
+#include <flecs.h>
 #include <raylib.h>
 #include <tmx.h>
 
@@ -49,8 +50,8 @@ we_map_coll_bounds *we_get_collision_bounds(tmx_map *map) {
             we_map_coll_bounds *new_node = malloc(sizeof(we_map_coll_bounds));
 
             new_node->bound = (Rectangle){
-                .x = j,
-                .y = i,
+                .x = j * w,
+                .y = i * h,
                 .width = w,
                 .height = h,
             };
@@ -69,4 +70,12 @@ we_map_coll_bounds *we_get_collision_bounds(tmx_map *map) {
     return first_head;
 }
 
-void we_draw_collision_bounds(we_map_coll_bounds *head) {}
+void we_draw_collision_bounds(we_map_coll_bounds *head) {
+    we_map_coll_bounds *node = head;
+    while (node) {
+        DrawRectangleLinesEx(node->bound, 1, RED);
+        node = node->next;
+    }
+}
+
+void we_map_coll_system(ecs_iter_t *it) {}

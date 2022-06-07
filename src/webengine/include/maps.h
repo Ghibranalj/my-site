@@ -4,8 +4,6 @@
 #include <raylib.h>
 #include <tmx.h>
 
-#include "physics.h"
-
 // automatically prefixed
 #define WE_MAP_LOCATION "resources/tmx/tiled/"
 

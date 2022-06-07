@@ -5,20 +5,19 @@
 void player_update(float time, ecs_entity_t entity, ecs_world_t *world);
 
 void player_init(ecs_world_t *world) {
-    WE_C(we_transform);
     WE_C(we_spritesheet);
     WE_C(we_animation);
 
     ecs_id_t player = ecs_new_id(world);
-    ecs_add(world, player, we_transform);
-    ecs_set(world, player, we_transform, {.position = {100, 100}});
 
-    ecs_add(world, player, we_spritesheet);
-    ecs_set(world, player, we_spritesheet,
-            {.texture = LoadTexture("resources/woman.png"),
-             .offset = 1,
-             .width = 16,
-             .height = 21});
+    we_transform_add(world, player);
+    we_movable_add(world, player);
+
+    we_transform_set_pos(world, player, (Vector2){100, 100});
+    we_movable_set_vel(world, player, (Vector2){0, 0});
+
+    we_spritesheet_add(world, player);
+    we_spitesheet_set(world, player, "resources/woman.png", 16, 21, 1);
 
     ecs_add(world, player, we_animation);
     ecs_set(world, player, we_animation, {.speed = 5});
@@ -69,8 +68,9 @@ void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
     we_lerp_camera(t->position.x, t->position.y, 10);
     we_zoom_camera(5);
 
-    ecs_set(world, entity, we_transform,
-            {.position = Vector2Add(t->position, we_get_axis())});
+    WE_C(we_movable);
+
+    we_movable_set_vel(world, entity, we_get_axis(100));
 
     Rectangle bounds = {
         .x = t->position.x, .y = t->position.y, .width = 16, .height = 21};

@@ -7,6 +7,8 @@
 
 #include "animations.h"
 #include "camera.h"
+#include "collisions.h"
+#include "graphics.h"
 #include "maps.h"
 #include "physics.h"
 
@@ -54,7 +56,15 @@ typedef struct {
     we_script_callback on_update;
 } we_script;
 
+typedef struct {
+    Rectangle rec;
+} we_collidable;
+
+typedef struct {
+    Vector2 velocity;
+} we_movable;
+
 #define WE_C(c) ECS_COMPONENT(we_get_world(), c)
 
 // input
-Vector2 we_get_axis();
+Vector2 we_get_axis(float scale);

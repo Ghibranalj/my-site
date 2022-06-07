@@ -84,6 +84,9 @@ void we_ecs_init_systems() {
                we_spritesheet);
 
     ECS_SYSTEM(we_world, we_script_system, EcsOnUpdate, we_script);
+
+    ECS_SYSTEM(we_world, we_movable_system, EcsOnUpdate, we_movable,
+               we_transform);
 }
 //
 void we_ecs_init_triggers() {

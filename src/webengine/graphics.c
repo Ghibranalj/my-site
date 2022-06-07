@@ -59,3 +59,21 @@ void we_on_delete_spritesheet(ecs_iter_t *it) {
         UnloadTexture(sp.texture);
     }
 }
+
+void we_spritesheet_add(ecs_world_t *world, ecs_entity_t entity) {
+    WE_C(we_spritesheet);
+    ecs_add(world, entity, we_spritesheet);
+}
+
+void we_spitesheet_set(ecs_world_t *world, ecs_entity_t entity,
+                       char *path_to_texture, int width, int height,
+                       int offset) {
+    WE_C(we_spritesheet);
+    ecs_set(world, entity, we_spritesheet,
+            {
+                .texture = LoadTexture(path_to_texture),
+                .width = width,
+                .height = height,
+                .offset = offset,
+            });
+}
