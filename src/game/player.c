@@ -1,36 +1,40 @@
+#include "graphics.h"
 #include "webengine.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 void player_update(float time, ecs_entity_t entity, ecs_world_t *world);
 
 void player_init(ecs_world_t *world) {
-    WE_C(we_transform);
     WE_C(we_spritesheet);
     WE_C(we_animation);
 
     ecs_id_t player = ecs_new_id(world);
-    ecs_add(world, player, we_transform);
-    ecs_set(world, player, we_transform, {.position = {100, 100}});
 
-    ecs_add(world, player, we_spritesheet);
-    ecs_set(world, player, we_spritesheet,
-            {.texture = LoadTexture("resources/woman.png"),
-             .offset = 1,
-             .width = 16,
-             .height = 21});
+    we_transform_add(world, player);
+    we_movable_add(world, player);
+
+    we_transform_set_pos(world, player, (Vector2){100, 100});
+    we_movable_set_vel(world, player, (Vector2){0, 0});
+
+    we_spritesheet_add(world, player);
+    we_spitesheet_set(world, player, "resources/woman.png", 16, 21, 1);
 
     ecs_add(world, player, we_animation);
-    ecs_set(world, player, we_animation, {.speed = 5});
+    ecs_set(world, player, we_animation,
+            {.speed = 5,
+             .frames = we_anim_frames(2, (int[]){5, 6}),
+             .num_frames = 2});
 
     WE_C(we_script);
     ecs_add(world, player, we_script);
     ecs_set(world, player, we_script, {.on_update = &player_update});
 
     WE_C(we_anim_manager);
-    ecs_add(world, player, we_anim_manager);
 
     int **animations = we_animations(2);
+
     animations[0] = we_anim_frames(2, (int[]){5, 6});
     animations[1] = we_anim_frames(2, (int[]){7, 8});
     int *length_of_animations = we_anim_frames(2, (int[]){2, 2});
@@ -42,10 +46,13 @@ void player_init(ecs_world_t *world) {
                 .len = 2,
                 .index = 0,
             });
+    WE_C(we_collidable);
 
-    WE_C(we_coll_bound);
-    ecs_add(world, player, we_coll_bound);
-    ecs_set(world, player, we_coll_bound, {.width = 16, .height = 21});
+    printf("im gonna error\n");
+    ecs_add(world, player, we_collidable);
+    printf("hello world\n");
+    ecs_set(world, player, we_collidable, {.width = 16, .height = 21});
+    printf("hello world2\n");
 }
 
 void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
@@ -63,7 +70,7 @@ void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
                  .speed = 7});
     }
 
-    if (IsKeyReleased(KEY_C)) {
+    if (IsKeyDown(KEY_C)) {
         we_change_anim_mngr_index(world, entity, 1);
     }
 
@@ -73,10 +80,5 @@ void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
     we_lerp_camera(t->position.x, t->position.y, 10);
     we_zoom_camera(5);
 
-    ecs_set(world, entity, we_transform,
-            {.position = Vector2Add(t->position, we_get_axis())});
-
-    Rectangle bounds = {
-        .x = t->position.x, .y = t->position.y, .width = 16, .height = 21};
-    DrawRectangleLinesEx(bounds, 2, YELLOW);
+    we_movable_set_vel(world, entity, we_get_axis(100));
 }

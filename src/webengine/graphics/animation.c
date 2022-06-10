@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "include/webengine.h"
+#include "../include/webengine.h"
 
 #define DEFAULT_ANIMATION_SPEED 0.5
 

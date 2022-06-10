@@ -5,8 +5,8 @@
 #include <raylib.h>
 #include <tmx.h>
 
-#include "engine.h"
-#include "include/webengine.h"
+#include "../engine.h"
+#include "../include/webengine.h"
 
 void *raylib_tex_loader(const char *path) {
     Texture2D *returnValue = malloc(sizeof(Texture2D));

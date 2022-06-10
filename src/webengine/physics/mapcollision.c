@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <strings.h>
 
+#include <flecs.h>
 #include <raylib.h>
 #include <tmx.h>
 
-#include "engine.h"
-#include "include/webengine.h"
+#include "../engine.h"
+#include "../include/webengine.h"
 
 tmx_layer *get_layer(tmx_map *map, const char *name) {
     tmx_layer *layer = map->ly_head;
@@ -46,22 +47,20 @@ we_map_coll_bounds *we_get_collision_bounds(tmx_map *map) {
             w = ts->tile_width;
             h = ts->tile_height;
 
-            // add to linked list
             we_map_coll_bounds *new_node = malloc(sizeof(we_map_coll_bounds));
-            Rectangle rec = (Rectangle){
-                .x = j * 16,
-                .y = i * 16,
+
+            new_node->bound = (Rectangle){
+                .x = j * w,
+                .y = i * h,
                 .width = w,
                 .height = h,
             };
 
-            new_node->rec = rec;
-            new_node->rec = rec;
             new_node->next = NULL;
+
             if (head == NULL) {
                 head = new_node;
-                first_head = new_node;
-
+                first_head = head;
                 continue;
             }
 
@@ -74,9 +73,10 @@ we_map_coll_bounds *we_get_collision_bounds(tmx_map *map) {
 }
 
 void we_draw_collision_bounds(we_map_coll_bounds *head) {
-    while (head) {
-        Rectangle rec = head->rec;
-        DrawRectangleLinesEx(rec, 1, GREEN);
-        head = head->next;
+    we_map_coll_bounds *node = head;
+
+    while (node) {
+        DrawRectangleLinesEx(node->bound, 1, RED);
+        node = node->next;
     }
 }
