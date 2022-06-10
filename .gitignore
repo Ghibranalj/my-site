@@ -5,3 +5,5 @@ docs/**/*
 objs/**/*
 deps/**/*
 tmp/**/*
+compile_commands.json
+.cache

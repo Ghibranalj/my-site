@@ -85,13 +85,13 @@ void we_ecs_init_systems() {
     ECS_SYSTEM(we_world, we_oneway_anim_system, EcsOnUpdate, we_oneway_anim,
                we_spritesheet);
 
-    ECS_SYSTEM(we_world, we_script_system, EcsOnUpdate, we_script);
+    ECS_SYSTEM(we_world, we_map_coll_system, EcsOnUpdate, we_collidable,
+               we_movable, we_transform);
 
     ECS_SYSTEM(we_world, we_movable_system, EcsOnUpdate, we_movable,
                we_transform);
 
-    ECS_SYSTEM(we_world, we_map_coll_system, EcsOnUpdate, we_collidable,
-               we_movable, we_transform);
+    ECS_SYSTEM(we_world, we_script_system, EcsPreUpdate, we_script);
 }
 //
 void we_ecs_init_triggers() {

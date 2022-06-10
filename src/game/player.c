@@ -1,3 +1,4 @@
+#include "graphics.h"
 #include "webengine.h"
 
 #include <stdio.h>
@@ -31,9 +32,9 @@ void player_init(ecs_world_t *world) {
     ecs_set(world, player, we_script, {.on_update = &player_update});
 
     WE_C(we_anim_manager);
-    ecs_add(world, player, we_anim_manager);
 
     int **animations = we_animations(2);
+
     animations[0] = we_anim_frames(2, (int[]){5, 6});
     animations[1] = we_anim_frames(2, (int[]){7, 8});
     int *length_of_animations = we_anim_frames(2, (int[]){2, 2});
@@ -45,7 +46,6 @@ void player_init(ecs_world_t *world) {
                 .len = 2,
                 .index = 0,
             });
-
     WE_C(we_collidable);
 
     printf("im gonna error\n");

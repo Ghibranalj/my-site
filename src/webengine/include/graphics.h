@@ -1,6 +1,7 @@
 
 #pragma once
 #include <flecs.h>
+#include <tmx.h>
 
 void we_spitesheet_set(ecs_world_t *world, ecs_entity_t entity,
                        char *path_to_texture, int width, int height,

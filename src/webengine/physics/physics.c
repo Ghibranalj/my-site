@@ -20,7 +20,6 @@ void we_movable_system(ecs_iter_t *it) {
 
         Vector2 pos = trans[i].position;
         Vector2 vel = movs[i].velocity;
-
         Vector2 vt = Vector2Scale(vel, GetFrameTime());
 
         Vector2 np = Vector2Add(pos, vt);
