@@ -3,8 +3,6 @@
 
 #include <flecs.h>
 
-#include <m-array.h>
-
 #include "../include/webengine.h"
 
 static ecs_query_t *coll_map_filter = NULL;
