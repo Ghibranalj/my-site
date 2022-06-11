@@ -74,11 +74,11 @@ void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {
         we_change_anim_mngr_index(world, entity, 1);
     }
 
+    we_movable_set_vel(world, entity, we_get_axis(1));
+
     WE_C(we_transform);
 
     const we_transform *t = ecs_get(world, entity, we_transform);
     we_lerp_camera(t->position.x, t->position.y, 10);
     we_zoom_camera(5);
-
-    we_movable_set_vel(world, entity, we_get_axis(100));
 }

@@ -15,6 +15,7 @@
 // global variable declarations
 we_game_t *we_game = NULL;
 ecs_world_t *we_world = NULL;
+float last_frame_time = 0;
 
 // local function declarations
 void we_init(void);
@@ -44,6 +45,10 @@ void we_create_and_start(we_game_t *game) {
 
 ecs_world_t *we_get_world() {
     return we_world;
+}
+
+float get_last_frame_time() {
+    return 1;
 }
 
 // local functions
@@ -85,13 +90,13 @@ void we_ecs_init_systems() {
     ECS_SYSTEM(we_world, we_oneway_anim_system, EcsOnUpdate, we_oneway_anim,
                we_spritesheet);
 
+    ECS_SYSTEM(we_world, we_script_system, EcsOnUpdate, we_script);
+
     ECS_SYSTEM(we_world, we_map_coll_system, EcsOnUpdate, we_collidable,
                we_movable, we_transform);
 
     ECS_SYSTEM(we_world, we_movable_system, EcsOnUpdate, we_movable,
                we_transform);
-
-    ECS_SYSTEM(we_world, we_script_system, EcsPreUpdate, we_script);
 }
 //
 void we_ecs_init_triggers() {
@@ -111,6 +116,8 @@ void we_ecs_init_triggers() {
     // TODO add trigger for delete spritesheet
 }
 
+bool is_paused = false;
+
 void we_update() {
     float delta = GetFrameTime();
 
@@ -118,6 +125,16 @@ void we_update() {
 
     //
     BeginDrawing();
+    if (IsKeyReleased(KEY_P)) {
+        printf("pressed key p\n");
+        is_paused = !is_paused;
+    }
+
+    if (is_paused) {
+
+        EndDrawing();
+        return;
+    }
     //
     WE_C(we_camera);
     const we_camera *cam = ecs_singleton_get(we_world, we_camera);
@@ -128,6 +145,7 @@ void we_update() {
 
     DrawFPS(10, 10);
     //
+    last_frame_time = GetFrameTime();
     EndDrawing();
 }
 

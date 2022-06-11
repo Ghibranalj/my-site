@@ -17,6 +17,13 @@ void we_movable_add(ecs_world_t *world, ecs_entity_t entity) {
     ecs_add(world, entity, we_movable);
 }
 
+void we_movable_add_vel(ecs_world_t *world, ecs_entity_t entity, Vector2 vel) {
+    WE_C(we_movable);
+    const we_movable *mov = ecs_get(world, entity, we_movable);
+    ecs_set(world, entity, we_movable,
+            {.velocity = Vector2Add(mov->velocity, vel)});
+}
+
 /*
 
 Transform

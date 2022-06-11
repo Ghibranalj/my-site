@@ -3,9 +3,11 @@
 
 #include <flecs.h>
 
-#include <m-array.h>
-
+#include "../engine.h"
 #include "../include/webengine.h"
+#include "collisionmath.h"
+
+#include <stdio.h>
 
 static ecs_query_t *coll_map_filter = NULL;
 
@@ -59,8 +61,9 @@ void do_collision(ecs_iter_t *it, we_map_coll_bounds *bounds,
         we_collidable col = colls[i];
         Vector2 pos = trans[i].position;
         Vector2 vel = movs[i].velocity;
+        // vel = Vector2Scale(vel, get_last_frame_time());
 
-        Vector2 np = Vector2Add(pos, Vector2Scale(vel, GetFrameTime()));
+        Vector2 np = Vector2Add(pos, vel);
 
         Rectangle bound = {
             .x = np.x,
@@ -69,42 +72,52 @@ void do_collision(ecs_iter_t *it, we_map_coll_bounds *bounds,
             .height = col.height,
         };
 
-        bool collided = false;
+        bound = move_rec(bound, vel);
+
         Vector2 result = Vector2Zero();
+
+        bool collided = false;
 
         while (head) {
             Rectangle map = head->bound;
-            if (!CheckCollisionRecs(map, bound)) {
-                head = head->next;
-                continue;
+
+            Vector2 cp, cn;
+            float t;
+            if (DynamicRectVsRect(bound, vel, map, &cp, &cn, &t)) {
+                collided = true;
+                DrawRectangleLinesEx(bound, 1, BROWN);
+                DrawCircle(cp.x, cp.y, 1, GREEN);
+
+                float d = 1 - t;
+
+                Vector2 v = (Vector2){
+                    fabs(vel.x) * d,
+                    fabs(vel.y) * d,
+                };
+
+                printf("v1 : %f %f\n", v.x, v.y);
+                Vector2 v2 = (Vector2){
+                    .x = v.x * cn.x,
+                    .y = v.y * cn.y,
+                };
+
+                printf("v2 : %f %f\n", v2.x, v2.y);
+
+                // v2 = Vector2Scale(v2, get_last_frame_time());
+
+                printf("vel-before : %f %f\n", vel.x, vel.y);
+
+                vel = Vector2Add(vel, v2);
+
+                printf("vel : %f %f\n", vel.x, vel.y);
             }
 
-            collided = true;
+            if (collided) {
+                we_movable_set_vel(world, e, vel);
+                printf("done\n");
+            }
 
-            Rectangle col_rec = GetCollisionRec(map, bound);
-
-            Vector2 mid_col_rec = {
-                .x = col_rec.x + col_rec.width / 2,
-                .y = col_rec.y + col_rec.height / 2,
-            };
-            Vector2 mid_bound = {
-                .x = bound.x + bound.width / 2,
-                .y = bound.y + bound.height / 2,
-            };
-            Vector2 dist = Vector2Subtract(mid_bound, mid_col_rec);
-
-            Vector2 v = (Vector2){
-                .x = dist.x / (bound.width / 2),
-                .y = dist.y / (bound.height / 2),
-            };
-
-            result = Vector2Add(result, v);
-            bound = move_rec(bound, v);
             head = head->next;
-        }
-        if (collided) {
-            ecs_set(world, e, we_movable,
-                    {.velocity = Vector2Scale(result, 2.2)});
         }
     }
 }

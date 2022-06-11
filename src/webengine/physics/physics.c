@@ -4,6 +4,7 @@
 #include <flecs.h>
 #include <raylib.h>
 
+#include "../engine.h"
 #include "../include/webengine.h"
 
 void we_movable_system(ecs_iter_t *it) {
@@ -20,12 +21,13 @@ void we_movable_system(ecs_iter_t *it) {
 
         Vector2 pos = trans[i].position;
         Vector2 vel = movs[i].velocity;
-        Vector2 vt = Vector2Scale(vel, GetFrameTime());
+        Vector2 vt = vel;
 
         Vector2 np = Vector2Add(pos, vt);
 
         ecs_set(world, entity, we_transform, {.position = np});
 
+        // printf("%f %f\n", vel.x, vel.y);
         // ecs_set(world, entity, we_movable, {.velocity = (Vector2){0, 0}});
     }
 }
