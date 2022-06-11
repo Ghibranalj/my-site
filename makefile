@@ -1,12 +1,13 @@
 CC = emcc
 # hack for github pages
 BUILD_PATH = docs
-OBJ_PATH = objs
 SRC_PATH = src
 LIB_PATH = vendor
 SHELL_HTML = index.html
 ASSET_PATH = resources
-DEP_PATH = deps
+TMP_PATH = tmp
+
+
 
 
 #INCLUDE
@@ -18,6 +19,9 @@ LIB = $(shell find $(LIB_PATH) -type f -name '*.a')
 #############
 ### LOGIC ###
 #############
+DEP_PATH = $(TMP_PATH)/deps
+OBJ_PATH = $(TMP_PATH)/objs
+
 SRC = $(shell find $(SRC_PATH) -type f -name *.c)
 OBJS  := $(SRC:$(SRC_PATH)/%.c=$(OBJ_PATH)/%.o)
 MODULES = $(subst $(SRC_PATH)/,,$(shell find $(SRC_PATH) -type d))
@@ -59,26 +63,27 @@ ifneq ($(MODULES),)
 	@mkdir -p $(foreach dir,$(MODULES),$(OBJ_PATH)/$(dir) $(DEP_PATH)/$(dir))
 endif
 
+debug : all
+debug : DEBUG_FLAGS=-g3 -sASSERTIONS=1
+
 index: $(OBJS)
 	$(info Building index.html...)
-	@$(CC) $^ -o $(BUILD_PATH)/index.html $(CCFLAGS) $(WASMFLAGS)
+	@$(CC) $^ -o $(BUILD_PATH)/index.html $(CCFLAGS) $(WASMFLAGS) $(DEBUG_FLAGS)
 	$(info  **************** BUILD SUCCESS ******************)
 
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
-	$(info Building $< ..)
-	@$(CC) $(INC_PARAMS) $(DEPFLAGS) $(CCFLAGS) -c -o $@ $<
+	$(info Building $<...)
+	@$(CC) $(INC_PARAMS) $(DEPFLAGS) $(CCFLAGS) $(DEBUG_FLAGS) -c -o $@ $<
 
 
-.PHONY: run
+.PHONY: run clean format
 run:
 	$(info running on 8080)
 	@live-server $(BUILD_PATH)  --ignore-Pattern=.*tmp.* --wait=1500 -q  
 
-.PHONY: clean
 clean:
 	@rm -rfv $(BUILD_PATH) $(OBJ_PATH) $(DEP_PATH)
 	
-.PHONY: format
 format:
 	@find $(SRC_PATH) -iname *.c -o -iname *.h | xargs clang-format -i
 
