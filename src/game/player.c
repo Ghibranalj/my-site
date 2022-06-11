@@ -1,7 +1,7 @@
 #include "graphics.h"
 #include "webengine.h"
 
-#include <stdio.h>
+#include <logging/logging.h>
 #include <stdlib.h>
 
 void player_update(float time, ecs_entity_t entity, ecs_world_t *world);
@@ -47,11 +47,10 @@ void player_init(ecs_world_t *world) {
             });
     C(collidable);
 
-    printf("im gonna error\n");
     ecs_add(world, player, collidable);
-    printf("hello world\n");
     ecs_set(world, player, collidable, {.width = 16, .height = 21});
-    printf("hello world2\n");
+
+    ERROR("Player initialized\n");
 }
 
 void player_update(float time, ecs_entity_t entity, ecs_world_t *world) {

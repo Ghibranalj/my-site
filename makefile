@@ -64,7 +64,7 @@ ifneq ($(MODULES),)
 endif
 
 debug : all
-debug : DEBUG_FLAGS=-g3 -sASSERTIONS=1
+debug : DEBUG_FLAGS=-g3 -DDEBUG=1
 
 index: $(OBJS)
 	$(info Building index.html...)

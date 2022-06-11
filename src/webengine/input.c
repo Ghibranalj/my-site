@@ -6,7 +6,7 @@
 #include <raymath.h>
 #include <stdbool.h>
 
-#include <stdio.h>
+#include "../include/logging/logging.h"
 
 #define INPUT_LERP_SPEED 100
 

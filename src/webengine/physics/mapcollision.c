@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include "../include/logging/logging.h"
 #include <stdlib.h>
 #include <strings.h>
 
@@ -25,7 +25,7 @@ map_coll_bounds *get_collision_bounds(tmx_map *map) {
     tmx_layer *layer = get_layer(map, COLLISION_LAYER_NAME);
 
     if (!layer) {
-        printf("could not find collision layer\n");
+        LOG("could not find collision layer\n");
         return NULL;
     }
 

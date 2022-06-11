@@ -32,6 +32,8 @@ void destoy_camera();
 void input_init();
 void update_input();
 
+void raylib_log(int msgType, const char *msg, va_list args);
+
 // must be called before using any components in any way
 #define _RAC()                                                                 \
     C(sprite);                                                                 \

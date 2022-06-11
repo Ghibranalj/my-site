@@ -1,6 +1,6 @@
+#include "../include/logging/logging.h"
 #include <emscripten/emscripten.h>
 #include <stddef.h>
-#include <stdio.h>
 
 #include "tmx.h"
 #include <flecs.h>
@@ -51,6 +51,8 @@ ecs_world_t *get_world() {
 void init() {
 
     engine_ecs_init();
+
+    SetTraceLogCallback(raylib_log);
     SetTargetFPS(game->fps);
     InitAudioDevice();
     InitWindow(game->width, game->height, game->title);

@@ -1,5 +1,5 @@
+#include "../include/logging/logging.h"
 #include <raylib.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #include <webengine.h>
@@ -32,7 +32,7 @@ int main() {
 
 void webgame_init() {
     ecs_world_t *world = get_world();
-    printf("world initialized\n");
+    LOG("world initialized\n");
 
     tmx_map *m = tmx_load(MAP_LOCATION "0001_Level_0.tmx");
     C(map);
@@ -47,7 +47,7 @@ void webgame_init() {
     C(coll_map);
     ecs_add(world, mape, coll_map);
     ecs_set(world, mape, coll_map, {.head = head});
-    printf("%p\n", head);
+    LOG("%p\n", head);
 }
 
 void webgame_update(float delta) {

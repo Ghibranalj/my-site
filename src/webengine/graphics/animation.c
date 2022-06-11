@@ -1,8 +1,8 @@
 #include <flecs.h>
 #include <raylib.h>
 
+#include "../include/logging/logging.h"
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "../include/webengine.h"
