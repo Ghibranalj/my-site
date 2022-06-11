@@ -9,17 +9,17 @@
 
 #define DEFAULT_ANIMATION_SPEED 0.5
 
-void we_animate_system(ecs_iter_t *it) {
+void animate_system(ecs_iter_t *it) {
 
-    we_animation *animation = ecs_term(it, we_animation, 1);
-    we_spritesheet *spitesheet = ecs_term(it, we_spritesheet, 2);
+    animation *anims = ecs_term(it, animation, 1);
+    spritesheet *spitesheet = ecs_term(it, spritesheet, 2);
 
     float delta = GetFrameTime();
     ecs_world_t *world = it->world;
 
     for (int i = 0; i < it->count; i++) {
 
-        we_animation an = animation[i];
+        animation an = anims[i];
 
         if (an.disabled || an.num_frames == 0 || an.frames == NULL)
             continue;
@@ -41,9 +41,9 @@ void we_animate_system(ecs_iter_t *it) {
                 an.index = 0;
             }
         }
-        WE_C(we_animation);
+        C(animation);
 
-        ecs_set(world, entity, we_animation,
+        ecs_set(world, entity, animation,
                 {.frames = frames,
                  .num_frames = an.num_frames,
                  .index = an.index,
@@ -52,14 +52,14 @@ void we_animate_system(ecs_iter_t *it) {
 
         int offset = frames[an.index];
 
-        we_spritesheet sp = spitesheet[i];
+        spritesheet sp = spitesheet[i];
 
         if (offset == sp.offset)
             continue;
 
-        WE_C(we_spritesheet);
+        C(spritesheet);
 
-        ecs_set(world, entity, we_spritesheet,
+        ecs_set(world, entity, spritesheet,
                 {.offset = offset,
                  .texture = sp.texture,
                  .width = sp.width,
@@ -67,9 +67,9 @@ void we_animate_system(ecs_iter_t *it) {
     }
 }
 
-void we_oneway_anim_system(ecs_iter_t *it) {
-    we_oneway_anim *one_way = ecs_term(it, we_oneway_anim, 1);
-    we_spritesheet *spitesheet = ecs_term(it, we_spritesheet, 2);
+void oneway_anim_system(ecs_iter_t *it) {
+    oneway_anim *one_way = ecs_term(it, oneway_anim, 1);
+    spritesheet *spitesheet = ecs_term(it, spritesheet, 2);
 
     float delta = GetFrameTime();
     ecs_world_t *world = it->world;
@@ -77,18 +77,18 @@ void we_oneway_anim_system(ecs_iter_t *it) {
     for (int i = 0; i < it->count; i++) {
         ecs_id_t entity = it->entities[i];
 
-        we_oneway_anim an = one_way[i];
+        oneway_anim an = one_way[i];
 
         if (an.disabled)
             continue;
 
-        WE_C(we_animation);
-        bool hasAnim = ecs_has(world, entity, we_animation);
+        C(animation);
+        bool hasAnim = ecs_has(world, entity, animation);
         if (hasAnim) {
 
-            const we_animation *ani = ecs_get(world, entity, we_animation);
+            const animation *ani = ecs_get(world, entity, animation);
 
-            ecs_set(world, entity, we_animation,
+            ecs_set(world, entity, animation,
                     {.frames = ani->frames,
                      .num_frames = ani->num_frames,
                      .index = ani->index,
@@ -115,12 +115,12 @@ void we_oneway_anim_system(ecs_iter_t *it) {
                 disabled = true;
             }
         }
-        WE_C(we_oneway_anim);
+        C(oneway_anim);
 
         if (disabled && hasAnim) {
-            const we_animation *ani = ecs_get(world, entity, we_animation);
+            const animation *ani = ecs_get(world, entity, animation);
 
-            ecs_set(world, entity, we_animation,
+            ecs_set(world, entity, animation,
                     {.frames = ani->frames,
                      .num_frames = ani->num_frames,
                      .index = ani->index,
@@ -130,11 +130,11 @@ void we_oneway_anim_system(ecs_iter_t *it) {
         }
 
         if (disabled) {
-            ecs_remove(world, entity, we_oneway_anim);
+            ecs_remove(world, entity, oneway_anim);
             continue;
         }
 
-        ecs_set(world, entity, we_oneway_anim,
+        ecs_set(world, entity, oneway_anim,
                 {.frames = frames,
                  .num_frames = an.num_frames,
                  .index = an.index,
@@ -144,14 +144,14 @@ void we_oneway_anim_system(ecs_iter_t *it) {
 
         int offset = frames[an.index];
 
-        we_spritesheet sp = spitesheet[i];
+        spritesheet sp = spitesheet[i];
 
         if (offset == sp.offset)
             continue;
 
-        WE_C(we_spritesheet);
+        C(spritesheet);
 
-        ecs_set(world, entity, we_spritesheet,
+        ecs_set(world, entity, spritesheet,
                 {.offset = offset,
                  .texture = sp.texture,
                  .width = sp.width,
@@ -159,16 +159,16 @@ void we_oneway_anim_system(ecs_iter_t *it) {
     }
 }
 
-void we_on_delete_anim(ecs_iter_t *it) {
-    WE_C(we_anim_manager);
-    we_animation *animation = ecs_term(it, we_animation, 1);
+void on_delete_anim(ecs_iter_t *it) {
+    C(anim_manager);
+    animation *anims = ecs_term(it, animation, 1);
 
     for (int i = 0; i < it->count; i++) {
-        we_animation anim = animation[i];
+        animation anim = anims[i];
 
         ecs_id_t ent = it->entities[i];
 
-        if (ecs_has(it->world, ent, we_anim_manager))
+        if (ecs_has(it->world, ent, anim_manager))
             continue;
 
         if (anim.frames == NULL)
@@ -177,19 +177,19 @@ void we_on_delete_anim(ecs_iter_t *it) {
     }
 }
 
-void we_on_delete_oneway_anim(ecs_iter_t *it) {
-    we_oneway_anim *animation = ecs_term(it, we_oneway_anim, 1);
+void on_delete_oneway_anim(ecs_iter_t *it) {
+    oneway_anim *anims = ecs_term(it, oneway_anim, 1);
     for (int i = 0; i < it->count; i++) {
-        we_animation anim = animation[i];
+        animation anim = anims[i];
         if (anim.frames != NULL)
             free(anim.frames);
     }
 }
 
-void we_on_delete_anim_manager(ecs_iter_t *it) {
-    we_anim_manager *anim_manager = ecs_term(it, we_anim_manager, 1);
+void on_delete_anim_manager(ecs_iter_t *it) {
+    anim_manager *managers = ecs_term(it, anim_manager, 1);
     for (int i = 0; i < it->count; i++) {
-        we_anim_manager anim = anim_manager[i];
+        anim_manager anim = managers[i];
 
         int len = anim.len;
         for (int j = 0; j < len; j++) {
@@ -204,13 +204,13 @@ void we_on_delete_anim_manager(ecs_iter_t *it) {
     }
 }
 
-int *we_anim_frames(int num, int *frames_arr) {
+int *anim_frames(int num, int *frames_arr) {
     int *frames = malloc(sizeof(int) * num);
     memcpy(frames, frames_arr, sizeof(int) * num);
     return frames;
 }
 
-int **we_animations(int len) {
+int **animations(int len) {
     int **animations = malloc(sizeof(int *) * len);
     for (int i = 0; i < len; i++) {
         animations[i] = NULL;
@@ -218,12 +218,12 @@ int **we_animations(int len) {
     return animations;
 }
 
-void we_on_mngr_set(ecs_iter_t *it) {
-    WE_C(we_animation);
-    we_anim_manager *manager = ecs_term(it, we_anim_manager, 1);
+void on_mngr_set(ecs_iter_t *it) {
+    C(animation);
+    anim_manager *manager = ecs_term(it, anim_manager, 1);
 
     for (int i = 0; i < it->count; i++) {
-        we_anim_manager mngr = manager[i];
+        anim_manager mngr = manager[i];
 
         ecs_id_t entity = it->entities[i];
 
@@ -232,12 +232,12 @@ void we_on_mngr_set(ecs_iter_t *it) {
         if (index >= len)
             continue;
 
-        if (!ecs_has(it->world, entity, we_animation))
+        if (!ecs_has(it->world, entity, animation))
             continue;
 
-        const we_animation *anim = ecs_get(it->world, entity, we_animation);
+        const animation *anim = ecs_get(it->world, entity, animation);
 
-        ecs_set(it->world, entity, we_animation,
+        ecs_set(it->world, entity, animation,
                 {.frames = mngr.animations[index],
                  .num_frames = mngr.length_of_animations[index],
                  .index = 0,
@@ -247,15 +247,14 @@ void we_on_mngr_set(ecs_iter_t *it) {
     }
 }
 
-void we_change_anim_mngr_index(ecs_world_t *world, ecs_id_t entity, int index) {
-    WE_C(we_anim_manager);
-    const we_anim_manager *anim_manager =
-        ecs_get(world, entity, we_anim_manager);
-    ecs_set(world, entity, we_anim_manager,
+void change_anim_mngr_index(ecs_world_t *world, ecs_id_t entity, int index) {
+    C(anim_manager);
+    const anim_manager *manager = ecs_get(world, entity, anim_manager);
+    ecs_set(world, entity, anim_manager,
             {
-                .animations = anim_manager->animations,
-                .length_of_animations = anim_manager->length_of_animations,
-                .len = anim_manager->len,
+                .animations = manager->animations,
+                .length_of_animations = manager->length_of_animations,
+                .len = manager->len,
                 .index = index,
             });
 }

@@ -13,10 +13,10 @@ void webgame_destroy(void);
 
 void player_update(float time, ecs_entity_t entity, ecs_world_t *world);
 
-we_map_coll_bounds *head;
+map_coll_bounds *head;
 //
 
-we_game_t webgame = {
+game_t webgame = {
     .title = "webgame",
     .width = 800,
     .height = 600,
@@ -27,31 +27,31 @@ we_game_t webgame = {
 };
 
 int main() {
-    we_create_and_start(&webgame);
+    create_and_start(&webgame);
 }
 
 void webgame_init() {
-    ecs_world_t *world = we_get_world();
+    ecs_world_t *world = get_world();
     printf("world initialized\n");
 
-    tmx_map *map = tmx_load(WE_MAP_LOCATION "0001_Level_0.tmx");
-    WE_C(we_map);
+    tmx_map *m = tmx_load(MAP_LOCATION "0001_Level_0.tmx");
+    C(map);
     ecs_entity_t mape = ecs_new_id(world);
-    ecs_add(world, mape, we_map);
-    ecs_set(world, mape, we_map, {.map = map});
+    ecs_add(world, mape, map);
+    ecs_set(world, mape, map, {.map = m});
 
     player_init(world);
 
-    head = we_get_collision_bounds(map);
+    head = get_collision_bounds(m);
 
-    WE_C(we_coll_map);
-    ecs_add(world, mape, we_coll_map);
-    ecs_set(world, mape, we_coll_map, {.head = head});
+    C(coll_map);
+    ecs_add(world, mape, coll_map);
+    ecs_set(world, mape, coll_map, {.head = head});
     printf("%p\n", head);
 }
 
 void webgame_update(float delta) {
-    we_draw_collision_bounds(head);
+    draw_collision_bounds(head);
 }
 
 void webgame_destroy() {}

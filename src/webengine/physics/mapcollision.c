@@ -20,7 +20,7 @@ tmx_layer *get_layer(tmx_map *map, const char *name) {
     return NULL;
 }
 
-we_map_coll_bounds *we_get_collision_bounds(tmx_map *map) {
+map_coll_bounds *get_collision_bounds(tmx_map *map) {
 
     tmx_layer *layer = get_layer(map, COLLISION_LAYER_NAME);
 
@@ -30,8 +30,8 @@ we_map_coll_bounds *we_get_collision_bounds(tmx_map *map) {
     }
 
     // create linked list
-    we_map_coll_bounds *head = NULL;
-    we_map_coll_bounds *first_head = NULL;
+    map_coll_bounds *head = NULL;
+    map_coll_bounds *first_head = NULL;
     int count = 0;
     for (int i = 0; i < map->width; i++) {
         for (int j = 0; j < map->height; j++) {
@@ -47,7 +47,7 @@ we_map_coll_bounds *we_get_collision_bounds(tmx_map *map) {
             w = ts->tile_width;
             h = ts->tile_height;
 
-            we_map_coll_bounds *new_node = malloc(sizeof(we_map_coll_bounds));
+            map_coll_bounds *new_node = malloc(sizeof(map_coll_bounds));
 
             new_node->bound = (Rectangle){
                 .x = j * w,
@@ -72,8 +72,8 @@ we_map_coll_bounds *we_get_collision_bounds(tmx_map *map) {
     return first_head;
 }
 
-void we_draw_collision_bounds(we_map_coll_bounds *head) {
-    we_map_coll_bounds *node = head;
+void draw_collision_bounds(map_coll_bounds *head) {
+    map_coll_bounds *node = head;
 
     while (node) {
         DrawRectangleLinesEx(node->bound, 1, RED);

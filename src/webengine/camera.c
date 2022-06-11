@@ -10,10 +10,10 @@
 
 float lerp(float pos, float target, float v);
 
-void we_init_camera() {
+void init_camera() {
 
-    ecs_world_t *world = we_get_world();
-    WE_C(we_camera);
+    ecs_world_t *world = get_world();
+    C(camera);
 
     Camera2D *cam = malloc(sizeof(Camera2D));
     cam->target = (Vector2){0, 0};
@@ -21,26 +21,26 @@ void we_init_camera() {
     cam->rotation = 0;
     cam->zoom = 1;
 
-    ecs_singleton_add(world, we_camera);
-    ecs_singleton_set(world, we_camera, {.camera = cam});
+    ecs_singleton_add(world, camera);
+    ecs_singleton_set(world, camera, {.camera = cam});
 }
 
-void we_destoy_camera() {
-    ecs_world_t *world = we_get_world();
-    WE_C(we_camera);
+void destoy_camera() {
+    ecs_world_t *world = get_world();
+    C(camera);
 
-    const we_camera *cam = ecs_singleton_get(world, we_camera);
+    const camera *cam = ecs_singleton_get(world, camera);
     free(cam->camera);
 }
 
-Camera2D *we_get_camera() {
-    WE_C(we_camera);
-    Camera2D *cam = ecs_singleton_get(we_get_world(), we_camera)->camera;
+Camera2D *get_camera() {
+    C(camera);
+    Camera2D *cam = ecs_singleton_get(get_world(), camera)->camera;
     return cam;
 }
 
-void we_center_camera(float x, float y) {
-    Camera2D *cam = we_get_camera();
+void center_camera(float x, float y) {
+    Camera2D *cam = get_camera();
 
     int w = GetScreenWidth();
     int h = GetScreenHeight();
@@ -51,15 +51,15 @@ void we_center_camera(float x, float y) {
     cam->target.y = y;
 }
 
-void we_lerp_camera(float x, float y, float speed) {
-    Camera2D *cam = we_get_camera();
+void lerp_camera(float x, float y, float speed) {
+    Camera2D *cam = get_camera();
     float delta = GetFrameTime();
 
     Vector2 t = Vector2Lerp(cam->target, (Vector2){x, y}, delta * speed);
-    we_center_camera(t.x, t.y);
+    center_camera(t.x, t.y);
 }
 
-void we_zoom_camera(float zoom) {
-    Camera2D *cam = we_get_camera();
+void zoom_camera(float zoom) {
+    Camera2D *cam = get_camera();
     cam->zoom = zoom;
 }

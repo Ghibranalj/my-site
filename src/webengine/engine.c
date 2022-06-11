@@ -13,117 +13,113 @@
 #include "include/webengine.h"
 
 // global variable declarations
-we_game_t *we_game = NULL;
-ecs_world_t *we_world = NULL;
+game_t *game = NULL;
+ecs_world_t *world = NULL;
 
 // local function declarations
-void we_init(void);
-void we_update(void);
-void we_destroy(void);
-void we_ecs_init(void);
+void init(void);
+void update(void);
+void destroy(void);
+void engine_ecs_init(void);
 
-void we_ecs_init_systems();
-void we_ecs_init_triggers();
+void ecs_init_systems();
+void ecs_init_triggers();
 
 // exported functions
-void we_create_and_start(we_game_t *game) {
-    we_game = game;
+void create_and_start(game_t *_game) {
+    game = _game;
 
-    we_init();
+    init();
 
 #ifdef PLATFORM_WEB
-    emscripten_set_main_loop(we_update, 0, 1);
+    emscripten_set_main_loop(update, 0, 1);
 #else
     while (!WindowShouldClose()) {
-        we_update();
+        update();
     }
 #endif
 
-    we_destroy();
+    destroy();
 }
 
-ecs_world_t *we_get_world() {
-    return we_world;
+ecs_world_t *get_world() {
+    return world;
 }
 
 // local functions
 
-void we_init() {
+void init() {
 
-    we_ecs_init();
-    SetTargetFPS(we_game->fps);
+    engine_ecs_init();
+    SetTargetFPS(game->fps);
     InitAudioDevice();
-    InitWindow(we_game->width, we_game->height, we_game->title);
-    we_init_map();
+    InitWindow(game->width, game->height, game->title);
+    init_map();
     init_collision();
-    we_init_camera();
-    we_game->on_init();
+    init_camera();
+    game->on_init();
 }
 
-void we_ecs_init() {
-    we_world = ecs_init();
+void engine_ecs_init() {
+    world = ecs_init();
 
     // register all systems
-    we_ecs_init_systems();
+    ecs_init_systems();
 
     // register all triggers
-    we_ecs_init_triggers();
+    ecs_init_triggers();
 
-    we_input_init();
+    input_init();
 }
 
-void we_ecs_init_systems() {
-    _WE_RAC();
-    ECS_SYSTEM(we_world, we_draw_system, EcsOnUpdate, we_sprite, we_transform);
+void ecs_init_systems() {
+    _RAC();
+    ECS_SYSTEM(world, draw_system, EcsOnUpdate, sprite, transform);
 
-    ECS_SYSTEM(we_world, we_draw_map_system, EcsPreUpdate, we_map);
-    ECS_SYSTEM(we_world, we_draw_spritesheet, EcsOnUpdate, we_spritesheet,
-               we_transform);
+    ECS_SYSTEM(world, draw_map_system, EcsPreUpdate, map);
+    ECS_SYSTEM(world, draw_spritesheet, EcsOnUpdate, spritesheet, transform);
 
-    ECS_SYSTEM(we_world, we_animate_system, EcsOnUpdate, we_animation,
-               we_spritesheet);
-    ECS_SYSTEM(we_world, we_oneway_anim_system, EcsOnUpdate, we_oneway_anim,
-               we_spritesheet);
+    ECS_SYSTEM(world, animate_system, EcsOnUpdate, animation, spritesheet);
+    ECS_SYSTEM(world, oneway_anim_system, EcsOnUpdate, oneway_anim,
+               spritesheet);
 
-    ECS_SYSTEM(we_world, we_map_coll_system, EcsOnUpdate, we_collidable,
-               we_movable, we_transform);
+    ECS_SYSTEM(world, map_coll_system, EcsOnUpdate, collidable, movable,
+               transform);
 
-    ECS_SYSTEM(we_world, we_movable_system, EcsOnUpdate, we_movable,
-               we_transform);
+    ECS_SYSTEM(world, movable_system, EcsOnUpdate, movable, transform);
 
-    ECS_SYSTEM(we_world, we_script_system, EcsPreUpdate, we_script);
+    ECS_SYSTEM(world, script_system, EcsPreUpdate, script);
 }
 //
-void we_ecs_init_triggers() {
-    _WE_RAC();
+void ecs_init_triggers() {
+    _RAC();
 
-    ECS_TRIGGER(we_world, we_on_delete_sprite, EcsOnRemove, we_sprite);
+    ECS_TRIGGER(world, on_delete_sprite, EcsOnRemove, sprite);
 
-    ECS_TRIGGER(we_world, we_on_delete_map, EcsOnRemove, we_map);
+    ECS_TRIGGER(world, on_delete_map, EcsOnRemove, map);
 
-    ECS_TRIGGER(we_world, we_on_delete_anim, EcsOnRemove, we_animation);
+    ECS_TRIGGER(world, on_delete_anim, EcsOnRemove, animation);
 
-    ECS_TRIGGER(we_world, we_on_delete_oneway_anim, EcsOnRemove,
-                we_oneway_anim);
+    ECS_TRIGGER(world, on_delete_oneway_anim, EcsOnRemove, oneway_anim);
 
-    ECS_TRIGGER(we_world, we_on_mngr_set, EcsOnSet, we_anim_manager);
+    ECS_TRIGGER(world, on_mngr_set, EcsOnSet, anim_manager);
 
     // TODO add trigger for delete spritesheet
 }
 
-void we_update() {
+void update() {
     float delta = GetFrameTime();
 
-    we_update_input();
+    update_input();
 
     //
     BeginDrawing();
     //
-    WE_C(we_camera);
-    const we_camera *cam = ecs_singleton_get(we_world, we_camera);
+    C(camera);
+    const camera *cam = ecs_singleton_get(world, camera);
     BeginMode2D(*(cam->camera));
-    ecs_progress(we_world, delta);
-    we_game->on_update(delta);
+    ecs_progress(world, delta);
+    game->on_update(delta);
     EndMode2D();
 
     DrawFPS(10, 10);
@@ -131,8 +127,8 @@ void we_update() {
     EndDrawing();
 }
 
-void we_destroy() {
-    we_game->on_destroy();
-    we_destoy_camera();
-    ecs_fini(we_world);
+void destroy() {
+    game->on_destroy();
+    destoy_camera();
+    ecs_fini(world);
 }

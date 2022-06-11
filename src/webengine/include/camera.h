@@ -2,7 +2,7 @@
 
 #include <raylib.h>
 
-Camera2D *we_get_camera();
-void we_center_camera(float x, float y);
-void we_zoom_camera(float zoom);
-void we_lerp_camera(float x, float y, float speed);
+Camera2D *get_camera();
+void center_camera(float x, float y);
+void zoom_camera(float zoom);
+void lerp_camera(float x, float y, float speed);

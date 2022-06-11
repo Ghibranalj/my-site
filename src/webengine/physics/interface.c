@@ -6,15 +6,15 @@ Movable
 
 */
 
-void we_movable_set_vel(ecs_world_t *world, ecs_entity_t entity, Vector2 vel) {
-    WE_C(we_movable);
+void movable_set_vel(ecs_world_t *world, ecs_entity_t entity, Vector2 vel) {
+    C(movable);
 
-    ecs_set(world, entity, we_movable, {.velocity = vel});
+    ecs_set(world, entity, movable, {.velocity = vel});
 }
 
-void we_movable_add(ecs_world_t *world, ecs_entity_t entity) {
-    WE_C(we_movable);
-    ecs_add(world, entity, we_movable);
+void movable_add(ecs_world_t *world, ecs_entity_t entity) {
+    C(movable);
+    ecs_add(world, entity, movable);
 }
 
 /*
@@ -23,14 +23,13 @@ Transform
 
 */
 
-void we_transform_set_pos(ecs_world_t *world, ecs_entity_t entity,
-                          Vector2 pos) {
-    WE_C(we_transform);
-    ecs_set(world, entity, we_transform, {.position = pos});
+void transform_set_pos(ecs_world_t *world, ecs_entity_t entity, Vector2 pos) {
+    C(transform);
+    ecs_set(world, entity, transform, {.position = pos});
 }
-void we_transform_add(ecs_world_t *world, ecs_entity_t entity) {
-    WE_C(we_transform);
-    ecs_add(world, entity, we_transform);
+void transform_add(ecs_world_t *world, ecs_entity_t entity) {
+    C(transform);
+    ecs_add(world, entity, transform);
 }
 
 /*
@@ -39,13 +38,13 @@ Collidable
 
 */
 
-void we_collidable_add(ecs_world_t *world, ecs_id_t entity) {
-    WE_C(we_collidable);
-    ecs_add(world, entity, we_collidable);
+void collidable_add(ecs_world_t *world, ecs_id_t entity) {
+    C(collidable);
+    ecs_add(world, entity, collidable);
 }
 
-void we_collidable_set(ecs_world_t *world, ecs_id_t entity, int width,
-                       int height) {
-    WE_C(we_collidable);
-    ecs_set(world, entity, we_collidable, {.width = width, .height = height});
+void collidable_set(ecs_world_t *world, ecs_id_t entity, int width,
+                    int height) {
+    C(collidable);
+    ecs_set(world, entity, collidable, {.width = width, .height = height});
 }

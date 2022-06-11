@@ -8,48 +8,48 @@
 #define MAX_COLLISION_REC 10240
 
 // system
-void we_draw_system(ecs_iter_t *it);
-void we_on_delete_sprite(ecs_iter_t *it);
+void draw_system(ecs_iter_t *it);
+void on_delete_sprite(ecs_iter_t *it);
 
-void we_draw_spritesheet(ecs_iter_t *it);
-void we_on_delete_spritesheet(ecs_iter_t *it);
+void draw_spritesheet(ecs_iter_t *it);
+void on_delete_spritesheet(ecs_iter_t *it);
 
-void we_animate_system(ecs_iter_t *it);
+void animate_system(ecs_iter_t *it);
 
-void we_update_system(ecs_iter_t *it);
-void we_oneway_anim_system(ecs_iter_t *it);
+void update_system(ecs_iter_t *it);
+void oneway_anim_system(ecs_iter_t *it);
 
-void we_script_system(ecs_iter_t *it);
+void script_system(ecs_iter_t *it);
 
-void we_on_delete_anim(ecs_iter_t *it);
-void we_on_delete_oneway_anim(ecs_iter_t *it);
+void on_delete_anim(ecs_iter_t *it);
+void on_delete_oneway_anim(ecs_iter_t *it);
 
-void we_on_mngr_set(ecs_iter_t *it);
+void on_mngr_set(ecs_iter_t *it);
 
-void we_init_camera();
-void we_destoy_camera();
+void init_camera();
+void destoy_camera();
 
-void we_input_init();
-void we_update_input();
+void input_init();
+void update_input();
 
 // must be called before using any components in any way
-#define _WE_RAC()                                                              \
-    WE_C(we_sprite);                                                           \
-    WE_C(we_transform);                                                        \
-    WE_C(we_map);                                                              \
-    WE_C(we_spritesheet);                                                      \
-    WE_C(we_animation);                                                        \
-    WE_C(we_oneway_anim);                                                      \
-    WE_C(we_script);                                                           \
-    WE_C(we_anim_manager);                                                     \
-    WE_C(we_coll_map);                                                         \
-    WE_C(we_movable);                                                          \
-    WE_C(we_collidable)
+#define _RAC()                                                                 \
+    C(sprite);                                                                 \
+    C(transform);                                                              \
+    C(map);                                                                    \
+    C(spritesheet);                                                            \
+    C(animation);                                                              \
+    C(oneway_anim);                                                            \
+    C(script);                                                                 \
+    C(anim_manager);                                                           \
+    C(coll_map);                                                               \
+    C(movable);                                                                \
+    C(collidable)
 
 typedef struct {
     Vector2 axis;
-} we_input;
+} input;
 
 typedef struct {
     Camera2D *camera;
-} we_camera;
+} camera;

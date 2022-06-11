@@ -165,11 +165,11 @@ void draw_all_layers(tmx_map *map, tmx_layer *layers) {
     }
 }
 
-void we_draw_map_system(ecs_iter_t *it) {
-    we_map *map_cs = ecs_term(it, we_map, 1);
+void draw_map_system(ecs_iter_t *it) {
+    map *map_cs = ecs_term(it, map, 1);
 
     for (int i = 0; i < it->count; i++) {
-        we_map map_c = map_cs[i];
+        map map_c = map_cs[i];
 
         tmx_map *map = map_c.map;
 
@@ -178,18 +178,18 @@ void we_draw_map_system(ecs_iter_t *it) {
     }
 }
 
-void we_on_delete_map(ecs_iter_t *it) {
-    we_map *map_cs = ecs_term(it, we_map, 1);
+void on_delete_map(ecs_iter_t *it) {
+    map *map_cs = ecs_term(it, map, 1);
 
     for (int i = 0; i < it->count; i++) {
-        we_map map_c = map_cs[i];
+        map map_c = map_cs[i];
 
         tmx_map *map = map_c.map;
         tmx_map_free(map);
     }
 }
 
-void we_init_map() {
+void init_map() {
     tmx_img_load_func = raylib_tex_loader;
     tmx_img_free_func = raylib_free_tex;
 }
