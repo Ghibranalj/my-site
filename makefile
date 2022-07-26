@@ -8,8 +8,6 @@ ASSET_PATH = resources
 TMP_PATH = tmp
 
 
-
-
 #INCLUDE
 INC = $(shell find $(SRC_PATH) $(LIB_PATH) -type d -name 'include')
 
@@ -45,7 +43,7 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $(DEP_PATH)/$*.d
 ###############
 ### TARGETS ###
 ###############
-.PHONY: release mkdir index air all dev
+.PHONY: release mkdir index air all dev run clean format setup
 
 all: format mkdir index
 
@@ -75,16 +73,17 @@ $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 	$(info Building $<...)
 	@$(CC) $(INC_PARAMS) $(DEPFLAGS) $(CCFLAGS) $(DEBUG_FLAGS) -c -o $@ $<
 
-
-.PHONY: run clean format
 run:
 	$(info running on 8080)
 	@live-server $(BUILD_PATH)  --ignore-Pattern=.*tmp.* --wait=1500 -q  
 
 clean:
-	@rm -rfv $(BUILD_PATH) $(OBJ_PATH) $(DEP_PATH)
-	
+	@rm -rfv $(BUILD_PATH) $(OBJ_PATH) $(DEP_PATH) $(TMP_PATH)
+
 format:
 	@find $(SRC_PATH) -iname *.c -o -iname *.h | xargs clang-format -i
+
+setup : clean
+	bear -- make debug
 
 include $(wildcard $(DEPFILES))
